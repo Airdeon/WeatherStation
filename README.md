@@ -1,0 +1,1 @@
+Weather Station project for raspberry pi and arduino nano(or other)
