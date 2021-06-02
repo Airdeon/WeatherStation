@@ -1,17 +1,3 @@
-// call and actualize fonction
-window.onload = function()
-{
-    dateAndTime();
-    showActualData();
-    createGraph();
-    createCustomGraph();
-    forecast();
-    setInterval("dateAndTime()", 1000);
-    setInterval("showActualData()", 5000);
-    setInterval("UpdateGraph()", 300000);
-    setInterval("UpdateCustomGraph()", 300000);
-    setInterval("forecast()", 1800000);
-};
 var updateGraphActivated = false;
 var updateCustomGraphActivated = false;
 var updateRainPrecipitationGraphActivated = false;
@@ -19,18 +5,36 @@ var dayTempHumiGraph;
 var dayPressureGraph;
 var customGraph;
 var actualTemperature;
+var linkOpenWeatherMap;
+
+// call and actualize fonction
+window.onload = function()
+{
+    dateAndTime();
+    getLink();
+    showActualData();
+    createGraph();
+    createCustomGraph();
+    setInterval("dateAndTime()", 1000);
+    setInterval("showActualData()", 5000);
+    setInterval("UpdateGraph()", 300000);
+    setInterval("UpdateCustomGraph()", 300000);
+    setInterval("forecast()", 1800000);
+};
 
 // show 0 before number if number < 10
 function showZero(number)
 {
     return number < 10 ? '0' + number : number;
 }
+
 // show Date an Time in webpage
 function dateAndTime()
 {
     const infos = new Date();
     document.getElementById('show_time').innerHTML = '<p id="dateTime">' + showZero(infos.getHours()) + ':' + showZero(infos.getMinutes()) + ':' + showZero(infos.getSeconds()) + '<br><span id="date">' + showZero(infos.getDate()) + '/' + showZero(infos.getMonth()+1) + '/' + infos.getFullYear() + '</span></p>';
 }
+
 //get Actual value from database and show it on webpage
 function showActualData()
 {
@@ -615,12 +619,36 @@ function UpdateCustomGraph()
         request.send();
     }
 }
+
+function getLink()
+{
+    const request = new XMLHttpRequest(),
+    method = "GET",
+    url = "link.php";
+    request.open(method, url, true);
+    request.onreadystatechange = function ()
+    {
+        // In local files, status is 0 upon success in Mozilla Firefox
+        if(request.readyState === XMLHttpRequest.DONE)
+        {
+            var status = request.status;
+            if (status === 0 || (status >= 200 && status < 400))
+            {
+                var response = JSON.parse(this.responseText);
+                linkOpenWeatherMap = response.OpenWeatherMapLink;
+                forecast();
+            }
+        }
+    };
+    request.send();
+}
+
 function forecast()
 {
     // Get a lot of information from openweathermap.org
     const request = new XMLHttpRequest(),
     method = "GET",
-    url = "https://api.openweathermap.org/data/2.5/onecall?lat=44.491626&lon=5.729331&units=metric&lang=fr&appid=f39953152da1fcc995e067622dc228f5";
+    url = linkOpenWeatherMap;
     request.open(method, url, true);
     request.onreadystatechange = function ()
     {

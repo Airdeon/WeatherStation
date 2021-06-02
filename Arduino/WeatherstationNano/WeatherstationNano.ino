@@ -25,6 +25,7 @@ int minuteAtLastEraseCheck;
 Adafruit_MCP23017 mcp;
 const int hallPinWindSpeed = 3;
 const int corectionWindSpeed = 6;
+const float spoonDistance = 0.085;//distance in meter between center of the spoon and central axe
 int windCounter = 0;
 int windCountLastTime = 0;
 int timeLastTime;
@@ -148,55 +149,55 @@ void loop()
 	String windDirection = "NoData";
 	if(!mcp.digitalRead(0))
 	{
-		windDirection = "N";
+		windDirection = "S";
 	}
 	if(!mcp.digitalRead(1))
 	{
-		windDirection = "NE";
+		windDirection = "SW";
 	}
 	if(!mcp.digitalRead(2))
 	{
-		windDirection = "E";
+		windDirection = "W";
 	}
 	if(!mcp.digitalRead(3))
 	{
-		windDirection = "SE";
+		windDirection = "NW";
 	}
 	if(!mcp.digitalRead(4))
 	{
-		windDirection = "S";
+		windDirection = "N";
 	}
 	if(!mcp.digitalRead(5))
 	{
-		windDirection = "SW";
+		windDirection = "NE";
 	}
 	if(!mcp.digitalRead(6))
 	{
-		windDirection = "W";
+		windDirection = "E";
 	}
 	if(!mcp.digitalRead(7))
 	{
-		windDirection = "NW";
+		windDirection = "SE";
 	}
 	if(!mcp.digitalRead(0) && !mcp.digitalRead(1))
 	{
-		windDirection = "NNE";
+		windDirection = "SSW";
 	}
 	if(!mcp.digitalRead(1) && !mcp.digitalRead(2))
 	{
-		windDirection = "ENE";
+		windDirection = "WSW";
 	}
 	if(!mcp.digitalRead(2) && !mcp.digitalRead(3))
 	{
-		windDirection = "ESE";
+		windDirection = "WNW";
 	}
 	if(!mcp.digitalRead(3) && !mcp.digitalRead(4))
 	{
-		windDirection = "SSE";
+		windDirection = "NNW";
 	}
 	if(!mcp.digitalRead(4) && !mcp.digitalRead(5))
 	{
-		windDirection = "SSW";
+		windDirection = "NNE";
 	}
 	if(!mcp.digitalRead(5) && !mcp.digitalRead(6))
 	{
@@ -204,11 +205,11 @@ void loop()
 	}
 	if(!mcp.digitalRead(6) && !mcp.digitalRead(7))
 	{
-		windDirection = "WNW";
+		windDirection = "ESE";
 	}
 	if(!mcp.digitalRead(7) && !mcp.digitalRead(0))
 	{
-		windDirection = "NNW";
+		windDirection = "SSE";
 	}
 
 	// Wind speed
@@ -221,13 +222,14 @@ void loop()
 	}
 	millisLastTime = millis();
 	float tourParS = 0.0f;
-	if (windCountFromLastTime != 0)
+	float windSpeed = 0.0f;
+	if (windCountFromLastTime > 0)
 	{
 		tourParS = 1000.0f * static_cast<float>(windCountFromLastTime) / static_cast<float>(timeFromLastTime);
+		windSpeed = 3.6*2*3.14*spoonDistance*tourParS;// Vitesse = 3.6(3600s per hours divide by 1000 for kilometre) * 2pi * diametre until center of spoon * loop by seconde
+		windSpeed *= corectionWindSpeed;
 	}
-	// Vitesse = 3.6(3600s per hours divide by 1000 for kilometre)*2pi*diametre jusqu'au centre des coupelle * loop by seconde
-  	float windSpeed = 3.6*2*3.14*0.085*tourParS;
-	windSpeed *= corectionWindSpeed;
+
 	//calcul of average windspeed of last 10 minute
 	windHistory[currentIndex] = windSpeed;
 	currentIndex = (currentIndex + 1) % windHistoryNumber;
@@ -292,6 +294,7 @@ void loop()
 		if(windCounter == oldWindCounter)
 		{
 			windCounter = 0;
+			windCountLastTime = 0;
 		}
 		oldWindCounter = windCounter;
 		minuteAtLastEraseCheck = myMinute;
