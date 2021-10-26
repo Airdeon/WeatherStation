@@ -62,7 +62,8 @@ try:
                 temperatureBME680 = round(sensor.data.temperature, 1)
                 humidityBME680 = sensor.data.humidity
                 seaLevelPressure = sensor.data.pressure + pressureCorection
-                cursor.execute("UPDATE IN_Actual_Data SET data_DateTime = %s, temperature = %s, humidity = %s WHERE id = 1", (time.strftime("%Y-%m-%d %H:%M:%S"), temperatureBME680, humidityBME680))
+                cursor.execute("UPDATE IN_Actual_Data SET data_DateTime = %s, temperature = %s, humidity = %s WHERE id = 1",
+                (time.strftime("%Y-%m-%d %H:%M:%S"), temperatureBME680, humidityBME680))
                 WeatherDataBase.commit()
                 print(sensor.data.temperature)
                 print(sensor.data.humidity)

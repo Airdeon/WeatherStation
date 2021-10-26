@@ -10,7 +10,7 @@ const int serialNumber = 10001;
 
 //battery
 const float TensionMin = 6.0f; //tension min
-const float TensionMax = 8.0f; //tension max
+const float TensionMax = 7.6f; //tension max
 
 //Initialize Sleep lib
 Sleep sleep;
@@ -47,6 +47,9 @@ DHT dht22(DHT22PIN, DHT22TYPE);
 
 void setup()
 {
+	// Serial for debug only
+	// Serial.begin(9600);
+
 	// Sleep time by default
 	sleepTime = 30000; //set sleep time in ms, max sleep time is 49.7 days
 
@@ -55,23 +58,23 @@ void setup()
 
 	// Initialise mpc controler for wind direction
 	mcp.begin();      // use default address 0
-	mcp.pinMode(0, INPUT);
-	mcp.pullUp(0, HIGH);
-	mcp.pinMode(1, INPUT);
-	mcp.pullUp(1, HIGH);
-	mcp.pinMode(2, INPUT);
-	mcp.pullUp(2, HIGH);
-	mcp.pinMode(3, INPUT);
-	mcp.pullUp(3, HIGH);
-	mcp.pinMode(4, INPUT);
-	mcp.pullUp(4, HIGH);
-	mcp.pinMode(5, INPUT);
-	mcp.pullUp(5, HIGH);
-	mcp.pinMode(6, INPUT);
-	mcp.pullUp(6, HIGH);
-	mcp.pinMode(7, INPUT);
-	mcp.pullUp(7, HIGH);
-	mcp.pinMode(8, OUTPUT);
+  	mcp.pinMode(4, INPUT);
+  	mcp.pullUp(4, HIGH);
+  	mcp.pinMode(5, INPUT);
+  	mcp.pullUp(5, HIGH);
+  	mcp.pinMode(6, INPUT);
+  	mcp.pullUp(6, HIGH);
+  	mcp.pinMode(7, INPUT);
+  	mcp.pullUp(7, HIGH);
+  	mcp.pinMode(8, INPUT);
+  	mcp.pullUp(8, HIGH);
+  	mcp.pinMode(9, INPUT);
+  	mcp.pullUp(9, HIGH);
+  	mcp.pinMode(10, INPUT);
+  	mcp.pullUp(10, HIGH);
+  	mcp.pinMode(11, INPUT);
+  	mcp.pullUp(11, HIGH);
+  	mcp.pinMode(0, OUTPUT);
 
 	// Initialize pin for battery test
 	pinMode(9, OUTPUT);
@@ -98,7 +101,7 @@ void setup()
 void loop()
 {
 	// Start hall sensor for wind speed
-	mcp.digitalWrite(8, HIGH);
+	mcp.digitalWrite(0, HIGH);
 
 	// Start battery test
 	digitalWrite(9, HIGH);
@@ -147,27 +150,27 @@ void loop()
 	// Wind direction
 	delay(10);
 	String windDirection = "NoData";
-	if(!mcp.digitalRead(0))
+	if(!mcp.digitalRead(4))
 	{
 		windDirection = "S";
 	}
-	if(!mcp.digitalRead(1))
+	if(!mcp.digitalRead(11))
 	{
 		windDirection = "SW";
 	}
-	if(!mcp.digitalRead(2))
+	if(!mcp.digitalRead(10))
 	{
 		windDirection = "W";
 	}
-	if(!mcp.digitalRead(3))
+	if(!mcp.digitalRead(9))
 	{
 		windDirection = "NW";
 	}
-	if(!mcp.digitalRead(4))
+	if(!mcp.digitalRead(8))
 	{
 		windDirection = "N";
 	}
-	if(!mcp.digitalRead(5))
+	if(!mcp.digitalRead(7))
 	{
 		windDirection = "NE";
 	}
@@ -175,42 +178,43 @@ void loop()
 	{
 		windDirection = "E";
 	}
-	if(!mcp.digitalRead(7))
+	if(!mcp.digitalRead(5))
 	{
 		windDirection = "SE";
 	}
-	if(!mcp.digitalRead(0) && !mcp.digitalRead(1))
+	if(!mcp.digitalRead(4) && !mcp.digitalRead(11))
 	{
 		windDirection = "SSW";
 	}
-	if(!mcp.digitalRead(1) && !mcp.digitalRead(2))
+	if(!mcp.digitalRead(10) && !mcp.digitalRead(11))
 	{
 		windDirection = "WSW";
 	}
-	if(!mcp.digitalRead(2) && !mcp.digitalRead(3))
+	if(!mcp.digitalRead(9) && !mcp.digitalRead(10))
 	{
 		windDirection = "WNW";
 	}
-	if(!mcp.digitalRead(3) && !mcp.digitalRead(4))
+	if(!mcp.digitalRead(8) && !mcp.digitalRead(9))
 	{
 		windDirection = "NNW";
 	}
-	if(!mcp.digitalRead(4) && !mcp.digitalRead(5))
+	if(!mcp.digitalRead(7) && !mcp.digitalRead(8))
 	{
 		windDirection = "NNE";
 	}
-	if(!mcp.digitalRead(5) && !mcp.digitalRead(6))
-	{
-		windDirection = "WSW";
-	}
 	if(!mcp.digitalRead(6) && !mcp.digitalRead(7))
+	{
+		windDirection = "ENE";
+	}
+	if(!mcp.digitalRead(5) && !mcp.digitalRead(6))
 	{
 		windDirection = "ESE";
 	}
-	if(!mcp.digitalRead(7) && !mcp.digitalRead(0))
+	if(!mcp.digitalRead(4) && !mcp.digitalRead(5))
 	{
 		windDirection = "SSE";
 	}
+	// Serial.println(windDirection); //debug
 
 	// Wind speed
 	int windCountFromLastTime = windCounter - windCountLastTime;
@@ -223,14 +227,18 @@ void loop()
 	millisLastTime = millis();
 	float tourParS = 0.0f;
 	float windSpeed = 0.0f;
+
 	if (windCountFromLastTime > 0)
 	{
 		tourParS = 1000.0f * static_cast<float>(windCountFromLastTime) / static_cast<float>(timeFromLastTime);
-		windSpeed = 3.6*2*3.14*spoonDistance*tourParS;// Vitesse = 3.6(3600s per hours divide by 1000 for kilometre) * 2pi * diametre until center of spoon * loop by seconde
+		// Vitesse = 3.6(3600s per hours divide by 1000 for kilometre) * 2pi * diametre until center of spoon * loop by seconde
+		// Serial.println(tourParS); //debug
+		windSpeed = 3.6*2*3.14*spoonDistance*tourParS;
 		windSpeed *= corectionWindSpeed;
+		// Serial.println(windSpeed); //debug
 	}
 
-	//calcul of average windspeed of last 10 minute
+	// Calcul of average windspeed of last 120 measure
 	windHistory[currentIndex] = windSpeed;
 	currentIndex = (currentIndex + 1) % windHistoryNumber;
 	float averageWind = 0.0f;
@@ -241,7 +249,7 @@ void loop()
 	if (averageWind != 0.0f)
 	{
 		averageWind /= windHistoryNumber;
-		// short sleep time if windy during last 10 minute
+		// Short sleep time if windy during last 120 measure
 		sleepTime = 5000;
 	}
 	else
@@ -254,7 +262,7 @@ void loop()
 	String singlePrecisionMaxWind(windSpeed, 1);
 
 	// Turn off Hall sensor for wind direction
-	mcp.digitalWrite(8, LOW);
+	mcp.digitalWrite(0, LOW);
 
 	// Build global String
 	stringOfAllSensorData = serial;
@@ -272,6 +280,7 @@ void loop()
 	stringOfAllSensorData += windDirection;
 	stringOfAllSensorData += " ";
 	stringOfAllSensorData += battery;
+	// Serial.println(stringOfAllSensorData); //debug
 
 	// send loop with repeat number
 	int repeatnumber = 5;
