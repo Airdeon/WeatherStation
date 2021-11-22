@@ -1,8 +1,7 @@
 <?php
     try
     {
-        $bdd = new PDO('mysql:host=localhost;dbname=WeatherDataBase;charset=utf8', 'weather', 'weatheraspremont');
-        $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db = new PDO('mysql:host=localhost;dbname=c1WeatherDataBase;charset=utf8', 'c1weatherstation', 'W4fYizE_',[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],);
     }
     catch (Exception $e)
     {
@@ -16,9 +15,9 @@
     $day2Before = strtotime("-2 days");
     $formatday2Before = date('"Y-m-d H:i:s"', $day2Before);
     // call Bdd
-    $request1Day = $bdd->query('SELECT * FROM Global_Data WHERE data_DateTime BETWEEN '.$formatday1Before.' AND '.$formatActualTime.'');
-    $request2Days = $bdd->query('SELECT * FROM Global_Data WHERE data_DateTime BETWEEN '.$formatday2Before.' AND '.$formatActualTime.'');
-    $rainPrecipitationRequest = $bdd->query('SELECT * FROM OUT_rainMeter WHERE entryDate BETWEEN '.$formatday2Before.' AND '.$formatActualTime.'');
+    $request1Day = $db->query('SELECT * FROM Global_Data WHERE data_DateTime BETWEEN '.$formatday1Before.' AND '.$formatActualTime.'');
+    $request2Days = $db->query('SELECT * FROM Global_Data WHERE data_DateTime BETWEEN '.$formatday2Before.' AND '.$formatActualTime.'');
+    $rainPrecipitationRequest = $db->query('SELECT * FROM Global_Data WHERE data_DateTime BETWEEN '.$formatday2Before.' AND '.$formatActualTime.'');
     // read data of last 24h
     while($donnees = $request1Day->fetch())
     {
@@ -39,9 +38,9 @@
     //read rain precipitation
     while($donnees = $rainPrecipitationRequest->fetch())
     {
-        $shortTimePrecipitation = substr($donnees['entryDate'],11,-3);
+        $shortTimePrecipitation = substr($donnees['data_DateTime'],11,-3);
         $resultArrayPrecipitationDate[] = $shortTimePrecipitation;
-        $resultArrayPrecipitation[] = $donnees['rainPrecipitation'];
+        $resultArrayPrecipitation[] = $donnees['precipitation'];
     }
     echo '{"date1Day": ', json_encode($resultArray1dayDate),',';
     echo '"temperature": ', json_encode($resultArrayTemp),',';

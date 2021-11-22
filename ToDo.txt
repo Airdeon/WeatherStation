@@ -1,0 +1,8 @@
+Add :
+-Time of Moon Sunrise
+-Time of Moon Sunset
+-Moon period
+-Saint of the day
+-Wind speed
+-Wind Direction
+-Water accumulation

@@ -10,7 +10,7 @@ const int serialNumber = 10001;
 
 //battery
 const float TensionMin = 6.0f; //tension min
-const float TensionMax = 7.6f; //tension max
+const float TensionMax = 7.5f; //tension max
 
 //Initialize Sleep lib
 Sleep sleep;

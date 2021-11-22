@@ -3,9 +3,12 @@ var updateCustomGraphActivated = false;
 var updateRainPrecipitationGraphActivated = false;
 var dayTempHumiGraph;
 var dayPressureGraph;
+var temperatureGraph;
 var customGraph;
 var actualTemperature;
 var linkOpenWeatherMap;
+var customGraphGeneratorValue = new Array("0","0","0","0","0","0","0");
+var firstLoad = true;
 
 // call and actualize fonction
 window.onload = function()
@@ -14,12 +17,17 @@ window.onload = function()
     getLink();
     showActualData();
     createGraph();
-    createCustomGraph();
+    createTemperatureGraph();
     setInterval("dateAndTime()", 1000);
     setInterval("showActualData()", 5000);
     setInterval("UpdateGraph()", 300000);
-    setInterval("UpdateCustomGraph()", 300000);
+    setInterval("UpdateTemperatureGraph()", 300000);
     setInterval("forecast()", 1800000);
+    showBlockDataType('yes');
+    showTimeRate('no');
+    showTime('no');
+    showTemperature('no');
+    showWind('no');
 };
 
 // show 0 before number if number < 10
@@ -95,19 +103,21 @@ function createGraph()
                     [
                         {
                             label: 'Temperature',
+                            data: response.temperature,
                             fontColor : 'rgb(255, 255, 255)',
                             borderColor: 'rgb(184, 66, 37)',
                             fill: false,
-                            yAxisID: 'y-axis-1',
-                            data: response.temperature
+                            yAxisID: 'y',
+                            tension: 0.3,
                         },
                         {
                             label: 'Humidity',
+                            data: response.humidity,
                             fontColor : 'rgb(255, 255, 255)',
                             borderColor: 'rgb(50, 52, 199)',
                             fill: false,
-                            yAxisID: 'y-axis-2',
-                            data: response.humidity
+                            yAxisID: 'y1',
+                            tension: 0.3,
                         }
                     ]
                 }
@@ -115,69 +125,69 @@ function createGraph()
                 {
                     responsive: true,
                     aspectRatio: 3,
-                    title:
+                    interaction:
                     {
-                        display: true,
-                        text: 'Temperature and humidity (24H)',
-                        fontColor : 'rgb(255, 255, 255)'
+                        mode: 'index',
+                        intersect: false,
                     },
-                    legend:
+                    stacked: false,
+                    plugins:
                     {
-                        labels:
+                        title:
                         {
-                            fontColor : 'rgb(255, 255, 255)',
-                        }
+                            display: true,
+                            text: 'Temperature and humidity (24H)',
+                            color : 'rgb(255, 255, 255)'
+                        },
+                        legend:
+                        {
+                            position: 'top',
+                            color : 'rgb(255, 255, 255)',
+                        },
                     },
                     scales:
                     {
-                        xAxes:
-                        [{
-                            ticks:
-                            {		// sert a regler l'echelle du graphique et faire les reglage sur cette echelle
-                                fontColor : 'rgb(255, 255, 255)' // couleur des jour de la semaine
+                        x:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Date',
+                                color : 'rgb(255, 255, 255)'
+                            }
+                        },
+                        y:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Temperature',
+                                color: 'rgb(255, 255, 255)',
                             },
-                        }],
-
-                        yAxes:
-                        [{
                             type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                             display: true,
                             position: 'left',
-                            id: 'y-axis-1',
-                            ticks:      // sert a regler l'echelle du graphique et faire les reglage sur cette echelle
-                            {
-                                fontColor : 'rgb(255, 255, 255)' // couleur des chiffre de la température
-                            },
-                            scaleLabel:
+                        },
+                        y1:
+                        {
+                            title:
                             {
                                 display: true,
-                                labelString: 'Temperature C°',
-                                fontColor : 'rgb(255, 255, 255)', // couleur du Label "Température"
+                                text: 'Humidity',
+                                color: 'rgb(255, 255, 255)',
                             },
-                        },
-                        {
                             type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                             display: true,
                             position: 'right',
-                            id: 'y-axis-2',
-                            ticks: {		// sert a regler l'echelle du graphique
-                                min: 0,
-                                max: 100,
-                                fontColor : 'rgb(255, 255, 255)', // Couleur des Chiffre de l'humidité
-                            },
-                            scaleLabel:
-                            {
-                                display: true,
-                                labelString: 'Humidity %',
-                                fontColor : 'rgb(255, 255, 255)', // Couleur du Label "Taux d'humidité"
-                            },
-
+                    		// sert a regler l'echelle du graphique
+                            min: 0,
+                            max: 100,
                             // grid line settings
-                            gridLines:
+                            grid:
                             {
                                 drawOnChartArea: false, // only want the grid lines for one axis to show up
                             },
-                        }],
+                        },
                     }
                 }
                 var config =
@@ -196,11 +206,11 @@ function createGraph()
                     [
                         {
                             label: 'Pressure',
+                            data: response.pressure,
                             fontColor : 'rgb(255, 255, 255)',
                             borderColor: 'rgb(67, 235, 52)',
                             fill: false,
-                            yAxisID: 'y-axis-1',
-                            data: response.pressure
+                            tension: 0.3,
                         }
                     ]
                 }
@@ -208,52 +218,43 @@ function createGraph()
                 {
                     responsive: true,
                     aspectRatio: 3,
-                    title:
+                    plugins:
                     {
-                        display: true,
-                        text: 'Pressure (48H)',
-                        fontColor : 'rgb(255, 255, 255)'
-                    },
-                    legend:
-                    {
-                        labels:
+                        title:
                         {
-                            fontColor : 'rgb(255, 255, 255)',
-                        }
+                            display: true,
+                            text: 'Pressure (48H)',
+                            color : 'rgb(255, 255, 255)',
+                        },
+                        legend:
+                        {
+                            position: 'top',
+                            color : 'rgb(255, 255, 255)',
+                        },
                     },
                     scales:
                     {
-                        xAxes:
-                        [{
-                            ticks:
-                            {		// sert a regler l'echelle du graphique et faire les reglage sur cette echelle
-                                fontColor : 'rgb(255, 255, 255)' // couleur des jour de la semaine
+                        x:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Date',
+                                color : 'rgb(255, 255, 255)'
+                            }
+                        },
+                        y:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Presure hPa',
+                                color: 'rgb(255, 255, 255)',
                             },
-                        }],
-
-                        yAxes:
-                        [{
                             type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                             display: true,
                             position: 'left',
-                            id: 'y-axis-1',
-                            ticks:      // sert a regler l'echelle du graphique et faire les reglage sur cette echelle
-                            {
-                                fontColor : 'rgb(255, 255, 255)' // couleur des chiffre de la température
-                            },
-                            scaleLabel:
-                            {
-                                display: true,
-                                labelString: 'Presure hPa',
-                                fontColor : 'rgb(255, 255, 255)', // couleur du Label "Température"
-                            },
-
-                            // grid line settings
-                            gridLines:
-                            {
-                                drawOnChartArea: false, // only want the grid lines for one axis to show up
-                            },
-                        }],
+                        },
                     },
                 }
                 var config2 =
@@ -272,21 +273,20 @@ function createGraph()
                     [
                         {
                             label: 'Wind',
+                            data: response.windSpeed,
                             fontColor : 'rgb(255, 255, 255)',
                             borderColor: 'rgb(218, 255, 214)',
                             fill: false,
-                            yAxisID: 'y-axis-1',
-                            data: response.windSpeed
+                            tension: 0.3,
                         },
                         {
                             label: 'Maximum Wind',
+                            data: response.maxWindSpeed,
                             fontColor : 'rgba(247, 132, 0, 0.8)',
                             borderColor: 'rgba(207, 110, 0, 0.8)',
                             backgroundColor: 'rgba(247, 132, 0, 0.8)',
                             borderWidth: '2px',
                             fill: false,
-                            yAxisID: 'y-axis-1',
-                            data: response.maxWindSpeed,
                             type: 'bar'
                         }
                     ]
@@ -295,52 +295,47 @@ function createGraph()
                 {
                     responsive: true,
                     aspectRatio: 3,
-                    title:
+                    plugins:
                     {
-                        display: true,
-                        text: 'Wind (48H)',
-                        fontColor : 'rgb(255, 255, 255)'
-                    },
-                    legend:
-                    {
-                        labels:
+                        title:
                         {
-                            fontColor : 'rgb(255, 255, 255)',
-                        }
+                            display: true,
+                            text: 'Wind (48H)',
+                            color : 'rgb(255, 255, 255)'
+                        },
+                        legend:
+                        {
+                            labels:
+                            {
+                                position: 'top',
+                                color : 'rgb(255, 255, 255)',
+                            }
+                        },
                     },
                     scales:
                     {
-                        xAxes:
-                        [{
-                            ticks:
-                            {		// sert a regler l'echelle du graphique et faire les reglage sur cette echelle
-                                fontColor : 'rgb(255, 255, 255)' // couleur des jour de la semaine
+                        x:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Date',
+                                color : 'rgb(255, 255, 255)'
                             },
-                        }],
+                        },
 
-                        yAxes:
-                        [{
+                        y:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Wind km/h',
+                                color : 'rgb(255, 255, 255)'
+                            },
                             type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                             display: true,
                             position: 'left',
-                            id: 'y-axis-1',
-                            ticks:      // sert a regler l'echelle du graphique et faire les reglage sur cette echelle
-                            {
-                                fontColor : 'rgb(255, 255, 255)' // couleur des chiffre de la température
-                            },
-                            scaleLabel:
-                            {
-                                display: true,
-                                labelString: 'wind Km/h',
-                                fontColor : 'rgb(255, 255, 255)', // couleur du Label "Température"
-                            },
-
-                            // grid line settings
-                            gridLines:
-                            {
-                                drawOnChartArea: false, // only want the grid lines for one axis to show up
-                            },
-                        }],
+                        },
                     },
                 }
                 var config5 =
@@ -359,12 +354,12 @@ function createGraph()
                     [
                         {
                             label: 'rain Precipitation',
+                            data: response.precipitation,
                             fontColor : 'rgb(255, 255, 255)',
                             borderColor: 'rgb(50, 52, 199)',
                             backgroundColor: 'rgb(50, 52, 199)',
                             fill: false,
-                            yAxisID: 'y-axis-1',
-                            data: response.precipitation
+                            yAxisID: 'y',
                         },
                     ]
                 }
@@ -372,52 +367,42 @@ function createGraph()
                 {
                     responsive: true,
                     aspectRatio: 3,
-                    title:
+                    plugins:
                     {
-                        display: false,
-                        text: 'rain Precipitation',
-                        fontColor : 'rgb(255, 255, 255)'
-                    },
-                    legend:
-                    {
-                        labels:
+                        title:
                         {
-                            fontColor : 'rgb(255, 255, 255)',
-                        }
+                            display: false,
+                            text: 'rain Precipitation',
+                            color : 'rgb(255, 255, 255)'
+                        },
+                        legend:
+                        {
+                            position: 'top',
+                            color : 'rgb(255, 255, 255)',
+                        },
                     },
                     scales:
                     {
-                        xAxes:
-                        [{
+                        x:
+                        {
                             ticks:
                             {		// sert a regler l'echelle du graphique et faire les reglage sur cette echelle
                                 fontColor : 'rgb(255, 255, 255)' // couleur des jour de la semaine
                             },
-                        }],
+                        },
 
-                        yAxes:
-                        [{
+                        y:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Precipitation mm',
+                                color: 'rgb(255, 255, 255)',
+                            },
                             type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                             display: true,
                             position: 'left',
-                            id: 'y-axis-1',
-                            ticks:      // sert a regler l'echelle du graphique et faire les reglage sur cette echelle
-                            {
-                                fontColor : 'rgb(255, 255, 255)' // couleur des chiffre de la température
-                            },
-                            scaleLabel:
-                            {
-                                display: true,
-                                labelString: 'Precipitation mm',
-                                fontColor : 'rgb(255, 255, 255)', // couleur du Label "Température"
-                            },
-
-                            // grid line settings
-                            gridLines:
-                            {
-                                drawOnChartArea: false, // only want the grid lines for one axis to show up
-                            },
-                        }],
+                        },
                     }
                 }
                 var config4 =
@@ -434,11 +419,11 @@ function createGraph()
     updateGraphActivated = true;
 }
 //create custom graph
-function createCustomGraph()
+function createTemperatureGraph()
 {
     const request = new XMLHttpRequest(),
         method = "GET",
-        url = "customGraph.php";
+        url = "temperatureGraph.php";
     request.open(method, url, true);
     // initialize global variable of graph
 
@@ -452,8 +437,8 @@ function createCustomGraph()
             {
                 // The request has been completed successfully
                 var response = JSON.parse(this.responseText);
-                // Temperature and humidity graph
-                var ctx3 = document.getElementById('customGraph').getContext('2d');
+                // Temperature graph
+                var ctx3 = document.getElementById('temperatureGraph').getContext('2d');
                 var data3 =
                 {
                     labels: response.date,
@@ -461,27 +446,27 @@ function createCustomGraph()
                     [
                         {
                             label: 'Min',
+                            data: response.min,
                             fontColor : 'rgb(255, 255, 255)',
                             borderColor: 'rgb(50, 52, 199)',
                             fill: false,
-                            yAxisID: 'y-axis-1',
-                            data: response.min
+                            tension: 0.3,
                         },
                         {
                             label: 'Max',
+                            data: response.max,
                             fontColor : 'rgb(255, 255, 255)',
                             borderColor: 'rgb(184, 66, 37)',
                             fill: false,
-                            yAxisID: 'y-axis-1',
-                            data: response.max
+                            tension: 0.3,
                         },
                         {
                             label: 'Average',
+                            data: response.average,
                             fontColor : 'rgb(255, 255, 255)',
                             borderColor: 'rgb(67, 235, 52)',
                             fill: false,
-                            yAxisID: 'y-axis-1',
-                            data: response.average
+                            tension: 0.3,
                         }
                     ]
                 }
@@ -489,52 +474,44 @@ function createCustomGraph()
                 {
                     responsive: true,
                     aspectRatio: 3,
-                    title:
+                    plugins:
                     {
-                        display: false,
-                        text: 'Min Max and Average temperature for this month',
-                        fontColor : 'rgb(255, 255, 255)'
-                    },
-                    legend:
-                    {
-                        labels:
+                        title:
                         {
-                            fontColor : 'rgb(255, 255, 255)',
-                        }
+                            display: true,
+                            text: 'Min Max and Average temperature for last 30 days',
+                            color : 'rgb(255, 255, 255)'
+                        },
+                        legend:
+                        {
+                            position: 'top',
+                            color : 'rgb(255, 255, 255)',
+                        },
                     },
                     scales:
                     {
-                        xAxes:
-                        [{
-                            ticks:
-                            {		// sert a regler l'echelle du graphique et faire les reglage sur cette echelle
-                                fontColor : 'rgb(255, 255, 255)' // couleur des jour de la semaine
-                            },
-                        }],
+                        x:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Date',
+                                color : 'rgb(255, 255, 255)'
+                            }
+                        },
 
-                        yAxes:
-                        [{
+                        y:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Temperature C°',
+                                color: 'rgb(255, 255, 255)',
+                            },
                             type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                             display: true,
                             position: 'left',
-                            id: 'y-axis-1',
-                            ticks:      // sert a regler l'echelle du graphique et faire les reglage sur cette echelle
-                            {
-                                fontColor : 'rgb(255, 255, 255)' // couleur des chiffre de la température
-                            },
-                            scaleLabel:
-                            {
-                                display: true,
-                                labelString: 'Temperature C°',
-                                fontColor : 'rgb(255, 255, 255)', // couleur du Label "Température"
-                            },
-
-                            // grid line settings
-                            gridLines:
-                            {
-                                drawOnChartArea: false, // only want the grid lines for one axis to show up
-                            },
-                        }],
+                        },
                     }
                 }
                 var config3 =
@@ -543,12 +520,12 @@ function createCustomGraph()
                     data: data3,
                     options: options3
                 }
-                customGraph = new Chart(ctx3, config3);
+                temperatureGraph = new Chart(ctx3, config3);
             }
         }
     };
     request.send();
-    updateCustomGraphActivated = true;
+    updateTemperatureGraphActivated = true;
 }
 function UpdateGraph()
 {
@@ -591,13 +568,13 @@ function UpdateGraph()
         request.send();
     }
 }
-function UpdateCustomGraph()
+function UpdateTemperatureGraph()
 {
-    if(updateCustomGraphActivated)
+    if(updateTemperatureGraphActivated)
     {
         const request = new XMLHttpRequest(),
             method = "GET",
-            url = "customGraph.php";
+            url = "temperatureGraph.php";
         request.open(method, url, true);
         request.onreadystatechange = function ()
         {
@@ -608,11 +585,11 @@ function UpdateCustomGraph()
                 if (status === 0 || (status >= 200 && status < 400))
                 {
                     var response = JSON.parse(this.responseText);
-                    customGraph.data.labels = response.date;
-                    customGraph.data.datasets[0].data = response.min;
-                    customGraph.data.datasets[1].data = response.max;
-                    customGraph.data.datasets[2].data = response.average;
-                    customGraph.update();
+                    temperatureGraph.data.labels = response.date;
+                    temperatureGraph.data.datasets[0].data = response.min;
+                    temperatureGraph.data.datasets[1].data = response.max;
+                    temperatureGraph.data.datasets[2].data = response.average;
+                    temperatureGraph.update();
                 }
             }
         };
@@ -677,6 +654,533 @@ function forecast()
                 document.getElementById('day+5').innerHTML = '<p>Day+5<br><img src="icone/' + response.daily[5].weather[0].icon + '.png" alt="forecast" /><br>' + Math.round(response.daily[5].temp.min) + ' C° / ' + Math.round(response.daily[5].temp.max) + ' C°</p>';
                 document.getElementById('day+6').innerHTML = '<p>Day+6<br><img src="icone/' + response.daily[6].weather[0].icon + '.png" alt="forecast" /><br>' + Math.round(response.daily[6].temp.min) + ' C° / ' + Math.round(response.daily[6].temp.max) + ' C°</p>';
                 document.getElementById('day+7').innerHTML = '<p>Day+7<br><img src="icone/' + response.daily[7].weather[0].icon + '.png" alt="forecast" /><br>' + Math.round(response.daily[7].temp.min) + ' C° / ' + Math.round(response.daily[7].temp.max) + ' C°</p>';
+            }
+        }
+    };
+    request.send();
+}
+
+function choiseBlockDataType(value)
+{
+    customGraphGeneratorValue [0] = value;
+    if (value > 0)
+    {
+        showTimeRate('yes'); showTime('no'); showTemperature('no'); showWind('no');
+    }
+    else
+    {
+        showTimeRate('no'); showTime('no'); showTemperature('no'); showWind('no');
+    }
+    if (customGraphGeneratorValue[1] > 0)
+    {
+        showTimeRateSelect(customGraphGeneratorValue[1])
+    }
+}
+function showTimeRateSelect(value)
+{
+    customGraphGeneratorValue [1] = value;
+    if (value > 0)
+    {
+        showTime('yes');
+    }
+    else
+    {
+        showTime('no');
+    }
+}
+function showBlockDataType(action)
+{
+    document.getElementById('blockDataType').style.display = (action == "yes")? "inline" : "none";
+    document.getElementById('customGraph').style.display = "none";
+}
+function showTimeRate(action)
+{
+    document.getElementById('blockTimeRate').style.display = (action == "yes")? "inline" : "none";
+}
+function soustractDayToCurrentDate(days)
+{
+    var currentDate = new Date();
+    return new Date(currentDate.setDate(currentDate.getDate() - days)).toISOString().slice(0, 10);
+}
+function showTime(action)
+{
+    var date = new Date().toISOString().slice(0, 10);
+    document.getElementById('blockTimeStart').style.display = (action == "yes")? "inline" : "none";
+    //document.getElementById('startDate').Value = soustractDayToCurrentDate(2);
+    document.getElementById('blockTimeEnd').style.display = (action == "yes")? "inline" : "none";
+    //document.getElementById('endDate').Value = date;
+    if (firstLoad)
+    {
+        customGraphGeneratorValue[2] = soustractDayToCurrentDate(2);
+        customGraphGeneratorValue[3] = date;
+        firstLoad = false
+    }
+    //Show parameter if necessary
+    if (customGraphGeneratorValue[0] == 1 && customGraphGeneratorValue[1] > 1 )
+    {
+        showTemperature('yes');
+        showWind('no');
+    }
+    else if (customGraphGeneratorValue[0] == 5)
+    {
+        showWind('yes');
+        showTemperature('no');
+    }
+    else
+    {
+        showWind('no');
+        showTemperature('no');
+    }
+    saveDataBase();
+}
+function saveTimeStart(value)
+{
+    customGraphGeneratorValue [2] = value;
+    saveDataBase();
+}
+function showTemperature(action)
+{
+    document.getElementById('blockTemperature').style.display = (action == "yes")? "inline" : "none";
+}
+function showWind(action)
+{
+    document.getElementById('blockWind').style.display = (action == "yes")? "inline" : "none";
+}
+function saveTimeEnd(value)
+{
+    customGraphGeneratorValue [3] = value;
+    saveDataBase();
+}
+function checkboxclik(checkBox)
+{
+    if (checkBox.checked)
+    {
+        switch (checkBox.id)
+        {
+            case 'min' : customGraphGeneratorValue [4] = 1;
+            break;
+            case 'max' : customGraphGeneratorValue [5] = 1;
+            break;
+            case 'average' : customGraphGeneratorValue [6] = 1;
+            break;
+        }
+    }
+    else
+    {
+        switch (checkBox.id)
+        {
+            case 'min' : customGraphGeneratorValue [4] = 0;
+            break;
+            case 'max' : customGraphGeneratorValue [5] = 0;
+            break;
+            case 'average' : customGraphGeneratorValue [6] = 0;
+            break;
+        }
+    }
+    if (customGraphGeneratorValue[0] == 5)
+    {
+        customGraphGeneratorValue[4] = 0;
+    }
+    saveDataBase(customGraphGeneratorValue);
+}
+
+function saveDataBase()
+{
+    if (customGraphGeneratorValue[0] == 1 || customGraphGeneratorValue[0] == 5)
+    {
+        sendString = "var0=" + customGraphGeneratorValue[0] + "&var1=" + customGraphGeneratorValue[1] + "&var2=" + customGraphGeneratorValue[2] + "&var3=" + customGraphGeneratorValue[3] + "&var4=" + customGraphGeneratorValue[4] + "&var5=" + customGraphGeneratorValue[5] + "&var6=" + customGraphGeneratorValue[6];
+    }
+    else
+    {
+        sendString = "var0=" + customGraphGeneratorValue[0] + "&var1=" + customGraphGeneratorValue[1] + "&var2=" + customGraphGeneratorValue[2] + "&var3=" + customGraphGeneratorValue[3] + "&var4=" + 0  + "&var5=" + 0  + "&var6=" + 0;
+    }
+    var php = new XMLHttpRequest();
+    php.open("POST", "saveDatabase.php", true)
+    php.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    php.send(sendString);
+    if (customGraphGeneratorValue[0] > 0 && customGraphGeneratorValue[1] > 0)
+    {
+    setTimeout(callGraph(),200);
+    }
+    document.getElementById('testtext').innerHTML = customGraphGeneratorValue;
+}
+function callGraph()
+{
+    document.getElementById('customGraph').style.display = "block";
+    const request = new XMLHttpRequest(),
+        method = "GET",
+        url = "customGraph.php";
+    request.open(method, url, true);
+    // initialize global variable of graph
+
+    request.onreadystatechange = function ()
+    {
+        // In local files, status is 0 upon success in Mozilla Firefox
+        if(request.readyState === XMLHttpRequest.DONE)
+        {
+            var status = request.status;
+            if (status === 0 || (status >= 200 && status < 400))
+            {
+                // The request has been completed successfully
+                var response = JSON.parse(this.responseText);
+                // selecter of graph format
+                var dataSetsChart;
+                var title;
+                var ylabel;
+                if (response.parameter[0] == 1)
+                {
+                    title = 'Temperature';
+                    ylabel = 'C°';
+                    //temperature
+                    if (response.parameter[1] == 1)
+                    {
+                        dataSetsChart =
+                        [{
+                            label: 'Temperature',
+                            data: response.value,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgb(184, 66, 37)',
+                            fill: false,
+                            tension: 0.3,
+                        }];
+                    }
+                    if (response.parameter[1] > 1)
+                    {
+                        if (response.parameter[4] == 1)
+                        {
+                            dataSetsChart =
+                            [{
+                                label: 'Minimum',
+                                data: response.min,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(50, 52, 199)',
+                                fill: false,
+                                tension: 0.3,
+                            }];
+                        }
+                        if (response.parameter[5] == 1)
+                        {
+                            dataSetsChart =
+                            [{
+                                label: 'Maximum',
+                                data: response.max,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(184, 66, 37)',
+                                fill: false,
+                                tension: 0.3,
+                            }];
+                        }
+                        if (response.parameter[6] == 1)
+                        {
+                            dataSetsChart =
+                            [{
+                                label: 'Average',
+                                data: response.average,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(67, 235, 52)',
+                                fill: false,
+                                tension: 0.3,
+                            }];
+                        }
+                        if (response.parameter[4] == 1 && response.parameter[5] == 1)
+                        {
+                            dataSetsChart =
+                            [{
+                                label: 'Minimum',
+                                data: response.min,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(50, 52, 199)',
+                                fill: false,
+                                tension: 0.3,
+                            },
+                            {
+                                label: 'Maximum',
+                                data: response.max,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(184, 66, 37)',
+                                fill: false,
+                                tension: 0.3,
+                            }];
+                        }
+                        if (response.parameter[4] == 1 && response.parameter[6] == 1)
+                        {
+                            dataSetsChart =
+                            [{
+                                label: 'Minimum',
+                                data: response.min,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(50, 52, 199)',
+                                fill: false,
+                                tension: 0.3,
+                            },
+                            {
+                                label: 'Average',
+                                data: response.average,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(67, 235, 52)',
+                                fill: false,
+                                tension: 0.3,
+                            }];
+                        }
+                        if (response.parameter[5] == 1 && response.parameter[6] == 1)
+                        {
+                            dataSetsChart =
+                            [{
+                                label: 'Maximum',
+                                data: response.max,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(184, 66, 37)',
+                                fill: false,
+                                tension: 0.3,
+                            },
+                            {
+                                label: 'Average',
+                                data: response.average,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(67, 235, 52)',
+                                fill: false,
+                                tension: 0.3,
+                            }];
+                        }
+                        if (response.parameter[4] == 1 && response.parameter[5] == 1 && response.parameter[6] == 1)
+                        {
+                            dataSetsChart =
+                            [{
+                                label: 'Minimum',
+                                data: response.min,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(50, 52, 199)',
+                                fill: false,
+                                tension: 0.3,
+                            },
+                            {
+                                label: 'Maximum',
+                                data: response.max,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(184, 66, 37)',
+                                fill: false,
+                                tension: 0.3,
+                            },
+                            {
+                                label: 'Average',
+                                data: response.average,
+                                fontColor : 'rgb(255, 255, 255)',
+                                borderColor: 'rgb(67, 235, 52)',
+                                fill: false,
+                                tension: 0.3,
+                            }];
+                        }
+                    }
+                }
+                // Wind
+                if (response.parameter[0] == 5)
+                {
+                    title = 'Wind';
+                    ylabel = 'Km/H';
+                    if (response.parameter[5] == 1)
+                    {
+                        dataSetsChart =
+                        [{
+                            label: 'Maximum wind speed',
+                            data: response.max,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgba(207, 110, 0, 0.8)',
+                            backgroundColor: 'rgba(247, 132, 0, 0.8)',
+                            fill: false,
+                            tension: 0.3,
+                            type: 'bar'
+                        }];
+                    }
+                    if (response.parameter[6] == 1)
+                    {
+                        dataSetsChart =
+                        [{
+                            label: 'Average wind speed',
+                            data: response.average,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgb(218, 255, 214)',
+                            fill: false,
+                            tension: 0.3,
+                        }];
+                    }
+                    if (response.parameter[5] == 1 && response.parameter[6] == 1)
+                    {
+                        dataSetsChart =
+                        [{
+                            label: 'Maximum wind speed',
+                            data: response.max,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgba(207, 110, 0, 0.8)',
+                            backgroundColor: 'rgba(247, 132, 0, 0.8)',
+                            fill: false,
+                            tension: 0.3,
+                            type: 'bar'
+                        },
+                        {
+                            label: 'Average wind speed',
+                            data: response.average,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgb(218, 255, 214)',
+                            fill: false,
+                            tension: 0.3,
+                        }];
+                    }
+                }
+                // Humidity
+                if (response.parameter[0] == 2)
+                {
+                    title = 'Humidity';
+                    ylabel = '%';
+                    if (response.parameter[1] == 1)
+                    {
+                        dataSetsChart =
+                        [{
+                            label: 'Humidity',
+                            data: response.value,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgb(50, 52, 199)',
+                            fill: false,
+                            tension: 0.3,
+                        }];
+                    }
+                    if (response.parameter[1] > 1)
+                    {
+                        title = 'Average Humidity';
+                        dataSetsChart =
+                        [{
+                            label: 'Humidity',
+                            data: response.average,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgb(50, 52, 199)',
+                            fill: false,
+                            tension: 0.3,
+                        }];
+                    }
+                }
+                // Pressure
+                if (response.parameter[0] == 3)
+                {
+                    title = 'Pressure';
+                    ylabel = 'Hpa';
+                    if (response.parameter[1] == 1)
+                    {
+                        dataSetsChart =
+                        [{
+                            label: 'Pressure',
+                            data: response.value,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgb(67, 235, 52)',
+                            fill: false,
+                            tension: 0.3,
+                        }];
+                    }
+                    if (response.parameter[1] > 1)
+                    {
+                        title = 'Average Pressure';
+                        dataSetsChart =
+                        [{
+                            label: 'Pressure',
+                            data: response.average,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgb(67, 235, 52)',
+                            fill: false,
+                            tension: 0.3,
+                        }];
+                    }
+                }
+                // Precipitation
+                if (response.parameter[0] == 4)
+                {
+                    title = 'Precipitation';
+                    ylabel = 'mm';
+                    if (response.parameter[1] == 1)
+                    {
+                        dataSetsChart =
+                        [{
+                            label: 'Precipitation',
+                            data: response.value,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgb(50, 52, 199)',
+                            fill: false,
+                            type: 'bar'
+                        }];
+                    }
+                    if (response.parameter[1] > 1)
+                    {
+                        title = 'Total Precipitation';
+                        dataSetsChart =
+                        [{
+                            label: 'Precipitation',
+                            data: response.total,
+                            fontColor : 'rgb(255, 255, 255)',
+                            borderColor: 'rgb(50, 52, 199)',
+                            fill: false,
+                            type: 'bar'
+                        }];
+                    }
+                }
+                // graph
+                var customctx = document.getElementById('customGraph').getContext('2d');
+                var customData =
+                {
+                    labels: response.date,
+                    datasets: dataSetsChart
+                }
+                var customOptions =
+                {
+                    responsive: true,
+                    aspectRatio: 3,
+                    plugins:
+                    {
+                        title:
+                        {
+                            display: true,
+                            text: title,
+                            color : 'rgb(255, 255, 255)'
+                        },
+                        legend:
+                        {
+                            position: 'top',
+                            color : 'rgb(255, 255, 255)',
+                        },
+                    },
+                    scales:
+                    {
+                        x:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: 'Date',
+                                color : 'rgb(255, 255, 255)'
+                            }
+                        },
+
+                        y:
+                        {
+                            title:
+                            {
+                                display: true,
+                                text: ylabel,
+                                color: 'rgb(255, 255, 255)',
+                            },
+                            type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                            display: true,
+                            position: 'left',
+                        },
+                    }
+                }
+                var customConfig =
+                {
+                    type: 'line',
+                    data: customData,
+                    options: customOptions
+                }
+                if (customGraph)
+                {
+                    customGraph.destroy();
+                }
+                customGraph = new Chart(customctx, customConfig);
             }
         }
     };
