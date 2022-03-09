@@ -35,11 +35,11 @@ ousideDataTime = time.time() - 1800
 
 # initialize Rainmeter
 mlPerTick = 5.5
-areaCm2 = 80
+areaCm2 = 120
 rainPrecipitation = 0
 rainPrecipitationLastTime = 0
 
-# initialize max Wind Speed of last 10 minute
+# initialize max Wind Speed of last 10 minute (120x5s(sleeptime))
 numberOfData = 120
 windData = []
 currentIndex = 0
@@ -100,6 +100,7 @@ try:
                     if windData[i] > maxWind:
                         maxWind = windData[i]
                 ousideDataTime = time.time()
+                print(maxWind)
 
         # Erase data if superior of 30 min
         if (time.time() - ousideDataTime) > 1800:
@@ -137,7 +138,7 @@ try:
                 # precipitation = (number of tick - previous number of tick) * ((ml Per Tick(5.5ml) / 1000(for convert to liter)) / (area cm²(80cm²) / 10000(for m²)))
                 rainPrecipitation = (int(outRainPrecipitation) - rainPrecipitationLastTime)*((mlPerTick / 1000) / (areaCm2 / 10000))
                 rainPrecipitationLastTime = int(outRainPrecipitation)
-                cursor.execute("UPDATE Global_Data SET temperature = %s, humidity = %s, windSpeed = %s, maxWindSpeed = %s, windDirection = %s, precipitation = %s, battery = %s WHERE data_DateTime = %s", (outTemperature, outHumidity, outWindSpeed, maxWind, outWindDirection, rainPrecipitation, outBattery, updateTime))
+                cursor.execute("UPDATE Global_Data SET temperature = %s, humidity = %s, windSpeed = %s, maxWindSpeed = %s, windDirection = %s, precipitation = %s, battery = %s WHERE data_DateTime = %s", (outTemperature, outHumidity, outAverageWindSpeed, maxWind, outWindDirection, rainPrecipitation, outBattery, updateTime))
             WeatherDataBase.commit()
             globalDataSaveTime = time.time()
             print("save all data")

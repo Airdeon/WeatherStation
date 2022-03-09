@@ -16,6 +16,8 @@ const float TensionMax = 7.5f; //tension max
 Sleep sleep;
 unsigned long sleepTime;
 
+
+
 // For Real millis in minute
 float myMinute = 0.0f;
 unsigned long millisLastTime = 0;
@@ -40,7 +42,7 @@ int waterCounter = 0;
 const int hallPinRainMeter = 2;//pin for hall sensor
 int oldWaterCount = 0;
 
-//Initialize DTH11 Temperature and humidity
+//Initialize DTH22 Temperature and humidity
 #define DHT22PIN 4    // pin of DHT22
 #define DHT22TYPE DHT22     // DHT 22
 DHT dht22(DHT22PIN, DHT22TYPE);
@@ -48,7 +50,7 @@ DHT dht22(DHT22PIN, DHT22TYPE);
 void setup()
 {
 	// Serial for debug only
-	// Serial.begin(9600);
+	Serial.begin(9600);
 
 	// Sleep time by default
 	sleepTime = 30000; //set sleep time in ms, max sleep time is 49.7 days
@@ -259,7 +261,7 @@ void loop()
 
 	// single precision wind
 	String singlePrecisionAverageWind(averageWind, 1);
-	String singlePrecisionMaxWind(windSpeed, 1);
+	String singlePrecisionWind(windSpeed, 1);
 
 	// Turn off Hall sensor for wind direction
 	mcp.digitalWrite(0, LOW);
@@ -275,15 +277,16 @@ void loop()
 	stringOfAllSensorData += " ";
 	stringOfAllSensorData += singlePrecisionAverageWind;
 	stringOfAllSensorData += " ";
-	stringOfAllSensorData += windSpeed;
+	stringOfAllSensorData += singlePrecisionWind;
 	stringOfAllSensorData += " ";
 	stringOfAllSensorData += windDirection;
 	stringOfAllSensorData += " ";
 	stringOfAllSensorData += battery;
-	// Serial.println(stringOfAllSensorData); //debug
+	Serial.println(stringOfAllSensorData); //debug
 
+	// Number of message send every cycle
+	int repeatnumber = 6;
 	// send loop with repeat number
-	int repeatnumber = 5;
 	while(repeatnumber > 0, repeatnumber--)
 	{
 		// send global string with all sensor data
@@ -292,16 +295,20 @@ void loop()
 		delay(100);
 	}
 
-	//Erase rain and wind data if no change during 1 hours
-	if((myMinute - minuteAtLastEraseCheck)> 60)
+	//Erase rain and wind data if no change during 2 hours
+	Serial.println(myMinute); //debug
+	if((myMinute - minuteAtLastEraseCheck)> 120)
   	{
+
     	if(waterCounter == oldWaterCount)
 		{
 			waterCounter = 0;
+			// Serial.println("water erase"); //debug
 		}
 		oldWaterCount = waterCounter;
 		if(windCounter == oldWindCounter)
 		{
+			// Serial.println("wind erase"); //debug
 			windCounter = 0;
 			windCountLastTime = 0;
 		}
