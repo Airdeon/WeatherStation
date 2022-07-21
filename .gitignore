@@ -2,3 +2,5 @@
 *.log
 model 3D/
 .*
+.env
+env

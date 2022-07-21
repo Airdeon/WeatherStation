@@ -1,0 +1,26 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% block css %}
+    <link rel="icon" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script type="text/javascript" src="{% static 'javascript/chart.js' %}"></script>
+
+
+    {% endblock css %}
+
+    {% block addjs %}
+    {% endblock addjs %}
+
+    {% block title %}
+    {% endblock title %}
+
+</head>
