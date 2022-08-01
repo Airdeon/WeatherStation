@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+    background-color: $main_bg_color;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.content {
+    margin: 20px;
+}
+
+h2 {
+    color: $text_color;
+}
+
+
+a {
+    cursor: pointer;
+}
