@@ -1,0 +1,13 @@
+.time_bloc {
+    display: flex;
+    flex-direction: column;
+
+    .time {
+        font-weight: bold;
+        font-size: 3.5em;
+    }
+
+    .date {
+        font-size: 2.5em;
+    }
+}

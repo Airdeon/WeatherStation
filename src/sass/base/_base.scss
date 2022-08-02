@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    background-color: $main_bg_color;
+    font-family: 'Ubuntu', sans-serif;
+    color: $text_color;
+}
+
+.row {
+    display: flex;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
+.block {
+    box-shadow:
+        2px 0 0 0 #888,
+        0 2px 0 0 #888,
+        2px 2px 0 0 #888,
+        /* Just to fix the corner */
+        2px 0 0 0 #888 inset,
+        0 2px 0 0 #888 inset;
+    border-collapse: collapse;
+    padding: 10px 20px 10px 20px;
+}
+
+.center {
+    text-align: center;
+}
+
+
+a {
+    cursor: pointer;
+}

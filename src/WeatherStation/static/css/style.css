@@ -1,0 +1,66 @@
+body {
+  margin: 0;
+  background-color: #313131;
+  font-family: "Ubuntu", sans-serif;
+  color: rgb(212, 212, 212);
+}
+
+.row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.col {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.block {
+  -webkit-box-shadow: 2px 0 0 0 #888, 0 2px 0 0 #888, 2px 2px 0 0 #888, 2px 0 0 0 #888 inset, 0 2px 0 0 #888 inset;
+          box-shadow: 2px 0 0 0 #888, 0 2px 0 0 #888, 2px 2px 0 0 #888, 2px 0 0 0 #888 inset, 0 2px 0 0 #888 inset;
+  border-collapse: collapse;
+  padding: 10px 20px 10px 20px;
+}
+
+.center {
+  text-align: center;
+}
+
+a {
+  cursor: pointer;
+}
+
+.time_bloc {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.time_bloc .time {
+  font-weight: bold;
+  font-size: 3.5em;
+}
+.time_bloc .date {
+  font-size: 2.5em;
+}
+
+.outside_bloc .actual_outide {
+  font-size: 3.5em;
+  font-weight: bold;
+  margin: 10px 20px 10px 20px;
+}
+.outside_bloc .unit {
+  font-size: 0.5em;
+}/*# sourceMappingURL=style.css.map */

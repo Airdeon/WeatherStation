@@ -1,0 +1,49 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script type="text/javascript" src="{% static 'javascript/chart.js' %}"></script>
+
+    <title>Weather Station</title>
+</head>
+
+<body>
+    <div class="row">
+        <div class="block time_bloc">
+            <span class="center time" id="time">12h50</span>
+            <span class="center date" id="date">02/08/2022</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="block outside_bloc">
+            <div class="row">
+                <div class="col actual_outide">
+                    <span class="center outside_temperature" id="outside_temp">35.2 <span class="unit">C°</span></span>
+                    <span class="center outside_humidity" id="outside_humidity">42 <span class="unit">%</span></span>
+                </div>
+
+                <div class="col min_max">
+                    <div class="block min">
+                        <span class="center outside_min_temp" id="outside_min_temp">14 <span
+                                class="unit">C°</span></span>
+                    </div>
+                    <div class="block average">
+                        <span class="center outside_average_temp" id="outside_average_temp">28 <span
+                                class="unit">C°</span></span>
+                    </div>
+                    <div class="block max">
+                        <span class="center outside_max_temp" id="outside_max_temp">37 <span
+                                class="unit">C°</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
