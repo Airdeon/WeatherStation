@@ -3,6 +3,7 @@ body {
   background-color: #313131;
   font-family: "Ubuntu", sans-serif;
   color: rgb(212, 212, 212);
+  font-size: 1.5em;
 }
 
 .row {
@@ -12,6 +13,7 @@ body {
   margin: 0;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
+  gap: 5px;
 }
 
 .col {
@@ -22,45 +24,56 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .block {
-  -webkit-box-shadow: 2px 0 0 0 #888, 0 2px 0 0 #888, 2px 2px 0 0 #888, 2px 0 0 0 #888 inset, 0 2px 0 0 #888 inset;
-          box-shadow: 2px 0 0 0 #888, 0 2px 0 0 #888, 2px 2px 0 0 #888, 2px 0 0 0 #888 inset, 0 2px 0 0 #888 inset;
-  border-collapse: collapse;
+  background-color: #4b4b4b;
+  border: 1px solid rgb(212, 212, 212);
+  border-radius: 5px;
   padding: 10px 20px 10px 20px;
+  margin-bottom: 5px;
+}
+.block .block_title {
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .center {
   text-align: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 a {
   cursor: pointer;
 }
 
-.time_bloc {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-.time_bloc .time {
+.time {
   font-weight: bold;
-  font-size: 3.5em;
-}
-.time_bloc .date {
-  font-size: 2.5em;
+  font-size: 3em;
 }
 
-.outside_bloc .actual_outide {
-  font-size: 3.5em;
+.date {
+  font-size: 2em;
+}
+
+.actual_data {
+  font-size: 3em;
   font-weight: bold;
   margin: 10px 20px 10px 20px;
 }
-.outside_bloc .unit {
+
+.unit {
   font-size: 0.5em;
+}
+
+.min_max {
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  font-weight: bold;
 }/*# sourceMappingURL=style.css.map */

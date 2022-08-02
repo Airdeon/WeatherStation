@@ -3,33 +3,37 @@ body {
     background-color: $main_bg_color;
     font-family: 'Ubuntu', sans-serif;
     color: $text_color;
+    font-size: 1.5em;
 }
 
 .row {
     display: flex;
     margin: 0;
     flex-wrap: wrap;
+    gap: 5px;
 }
 
 .col {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 .block {
-    box-shadow:
-        2px 0 0 0 #888,
-        0 2px 0 0 #888,
-        2px 2px 0 0 #888,
-        /* Just to fix the corner */
-        2px 0 0 0 #888 inset,
-        0 2px 0 0 #888 inset;
-    border-collapse: collapse;
+    background-color: $second_bg_color;
+    border: 1px solid $text_color;
+    border-radius: 5px;
     padding: 10px 20px 10px 20px;
+    margin-bottom: 5px;
+    .block_title{
+        font-weight: bold;
+        font-size: 1.2em;
+    }
 }
 
 .center {
     text-align: center;
+    justify-content: center;
 }
 
 

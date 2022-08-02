@@ -1,12 +1,14 @@
-.outside_bloc {
+.actual_data {
+    font-size: 3em;
+    font-weight: bold;
+    margin: 10px 20px 10px 20px;
+}
 
-    .actual_outide {
-        font-size: 3.5em;
-        font-weight: bold;
-        margin: 10px 20px 10px 20px;
-    }
+.unit {
+    font-size: 0.5em;
+}
 
-    .unit {
-        font-size: 0.5em;
-    }
+.min_max{
+    justify-content: space-evenly;
+    font-weight: bold;
 }
