@@ -22,8 +22,30 @@
             <span class="center date" id="date"></span>
         </div>
         <div class="block col suntime_bloc" id="sunriseSunsetTime">
-            <div class="row"><img id="imageSunrise" src="{% static 'images/Sunrise.png' %}"/><div id="sunrise_time" class="col center"></div></div>
-            <div class="row"><img id="imageSunset" src="{% static 'images/Sunset.png' %}"/><div id="sunset_time" class="col center"></div></div>
+            <div class="row"><img id="imageSunrise" src="{% static 'images/Sunrise.png' %}" />
+                <div id="sunrise_time" class="col center"></div>
+            </div>
+            <div class="row"><img id="imageSunset" src="{% static 'images/Sunset.png' %}" />
+                <div id="sunset_time" class="col center"></div>
+            </div>
+        </div>
+        <div class="block short_forecast" id="short_forecast">
+            <div class="row">
+                <div class="col">
+                    <h3>Now</h3>
+                    <img id="current_forecast_image" src="">
+                    <span id="current_forecast"></span>
+                </div>
+                <div class="col">
+                    <h3>+ 1H</h3>
+                    <img id="+1h_Forecast_image" src="">
+                    <span id="+1h_Forecast"></span>
+                </div>
+                <div id="+1hForecast"></div>
+                <div id="+3hForecast"></div>
+                <div id="+6hForecast"></div>
+            </div>
+
         </div>
     </div>
     <div class="row">
@@ -32,8 +54,12 @@
             <div class="row center block_title">Inside</div>
             <div class="row">
                 <div class="col actual_data">
-                    <span class="center inside_temperature" id="inside_temp">35.2 <span class="unit">C°</span></span>
-                    <span class="center inside_humidity" id="inside_humidity">42 <span class="unit">%</span></span>
+                    <span class="center inside_temperature" id="inside_temp">
+                        {{ inside_actual_data.temperature }}
+                        <span class="unit">C°</span></span>
+                    <span class="center inside_humidity" id="inside_humidity">
+                        {{ inside_actual_data.humidity }}
+                        <span class="unit">%</span></span>
                 </div>
             </div>
         </div>
@@ -43,23 +69,27 @@
             <div class="row center block_title">Outside</div>
             <div class="row">
                 <div class="col actual_data">
-                    <span class="center outside_temperature" id="outside_temp">35.2 <span class="unit">C°</span></span>
-                    <span class="center outside_humidity" id="outside_humidity">42 <span class="unit">%</span></span>
+                    <span class="center outside_temperature" id="outside_temp">
+                        {{ actual_data.temperature }}
+                        <span class="unit">C°</span></span>
+                    <span class="center outside_humidity" id="outside_humidity">
+                        {{ actual_data.humidity }}
+                        <span class="unit">%</span></span>
                 </div>
 
                 <div class="col min_max">
                     <div class="row center block_title">- 24 h</div>
                     <div class="block min">
-                        <span class="center outside_min_temp" id="outside_min_temp">14 <span
-                                class="unit">C° Min</span></span>
+                        <span class="center outside_min_temp" id="outside_min_temp">14 <span class="unit">C°
+                                Min</span></span>
                     </div>
                     <div class="block average">
-                        <span class="center outside_average_temp" id="outside_average_temp">28 <span
-                                class="unit">C° Avr</span></span>
+                        <span class="center outside_average_temp" id="outside_average_temp">28 <span class="unit">C°
+                                Avr</span></span>
                     </div>
                     <div class="block max">
-                        <span class="center outside_max_temp" id="outside_max_temp">37 <span
-                                class="unit">C° Max</span></span>
+                        <span class="center outside_max_temp" id="outside_max_temp">37 <span class="unit">C°
+                                Max</span></span>
                     </div>
                 </div>
             </div>
