@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  padding: 5px;
   background-color: #313131;
   font-family: "Ubuntu", sans-serif;
   color: rgb(212, 212, 212);
@@ -29,14 +30,14 @@ body {
           justify-content: center;
 }
 
-.block {
+.bloc {
   background-color: #4b4b4b;
   border: 1px solid rgb(212, 212, 212);
   border-radius: 5px;
   padding: 10px 20px 10px 20px;
   margin-bottom: 5px;
 }
-.block .block_title {
+.bloc .block_title {
   font-weight: bold;
   font-size: 1.2em;
 }
@@ -52,6 +53,18 @@ a {
   cursor: pointer;
 }
 
+.time_bloc {
+  -webkit-box-flex: 2;
+      -ms-flex-positive: 2;
+          flex-grow: 2;
+}
+
+.suntime_bloc {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
 .time {
   font-weight: bold;
   font-size: 3em;
@@ -59,6 +72,24 @@ a {
 
 .date {
   font-size: 2em;
+}
+
+.inside_bloc {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
+.outside_bloc {
+  -webkit-box-flex: 2;
+      -ms-flex-positive: 2;
+          flex-grow: 2;
+}
+
+.wind_bloc {
+  -webkit-box-flex: 6;
+      -ms-flex-positive: 6;
+          flex-grow: 6;
 }
 
 .actual_data {
@@ -76,4 +107,21 @@ a {
       -ms-flex-pack: space-evenly;
           justify-content: space-evenly;
   font-weight: bold;
+}
+
+.forecast_image {
+  max-height: 80px;
+}
+
+.short_forecast {
+  -webkit-box-flex: 10;
+      -ms-flex-positive: 10;
+          flex-grow: 10;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
 }/*# sourceMappingURL=style.css.map */

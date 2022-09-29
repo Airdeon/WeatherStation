@@ -41,8 +41,10 @@ async function fill_forecast_data() {
     document.getElementById('sunrise_time').innerHTML = sunriseTime.getHours() + ":" + showZero(sunriseTime.getMinutes());
     document.getElementById('sunset_time').innerHTML = sunsetTime.getHours() + ":" + showZero(sunsetTime.getMinutes());
     document.getElementById('current_forecast_image').src = "static/images/" + response.current.weather[0].icon + ".png";
-    document.getElementById('+1h_forecast').innerHTML = "" + Math.round(response.hourly[2].temp);
+    document.getElementById('+1h_forecast').innerHTML = "" + Math.round(response.hourly[2].temp) + " C°";
     document.getElementById('+1h_forecast_image').src = "static/images/" + response.hourly[2].weather[0].icon + ".png";
-    document.getElementById('+3hForecast').innerHTML = '<p>+3H<br><img src="static/images/' + response.hourly[4].weather[0].icon + '.png" alt="forecast" /><br>' + Math.round(response.hourly[4].temp) + ' C°</p>';
-    document.getElementById('+6hForecast').innerHTML = '<p>+6H<br><img src="static/images/' + response.hourly[7].weather[0].icon + '.png" alt="forecast" /><br>' + Math.round(response.hourly[7].temp) + ' C°</p>';
+    document.getElementById('+3h_forecast').innerHTML = "" + Math.round(response.hourly[4].temp) + " C°";
+    document.getElementById('+3h_forecast_image').src = "static/images/" + response.hourly[4].weather[0].icon + ".png";
+    document.getElementById('+6h_forecast').innerHTML = "" + Math.round(response.hourly[7].temp) + " C°";
+    document.getElementById('+6h_forecast_image').src = "static/images/" + response.hourly[7].weather[0].icon + ".png";
 }

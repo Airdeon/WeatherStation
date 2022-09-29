@@ -17,11 +17,11 @@
 
 <body>
     <div class="row">
-        <div class="block col time_bloc">
+        <div class="bloc col time_bloc">
             <span class="center time" id="time"></span>
             <span class="center date" id="date"></span>
         </div>
-        <div class="block col suntime_bloc" id="sunriseSunsetTime">
+        <div class="bloc col suntime_bloc" id="sunriseSunsetTime">
             <div class="row"><img id="imageSunrise" src="{% static 'images/Sunrise.png' %}" />
                 <div id="sunrise_time" class="col center"></div>
             </div>
@@ -29,28 +29,33 @@
                 <div id="sunset_time" class="col center"></div>
             </div>
         </div>
-        <div class="block short_forecast" id="short_forecast">
-            <div class="row">
-                <div class="col">
-                    <h3>Now</h3>
-                    <img id="current_forecast_image" src="">
-                    <span id="current_forecast"></span>
-                </div>
-                <div class="col">
-                    <h3>+ 1H</h3>
-                    <img id="+1h_Forecast_image" src="">
-                    <span id="+1h_Forecast"></span>
-                </div>
-                <div id="+1hForecast"></div>
-                <div id="+3hForecast"></div>
-                <div id="+6hForecast"></div>
+        <div class="bloc short_forecast" id="short_forecast">
+            <div class="col">
+                <span class="forecast_title">Now</span>
+                <img id="current_forecast_image" src="" class="forecast_image">
+                <span id="current_forecast"></span>
+            </div>
+            <div class="col">
+                <span class="forecast_title">+ 1H</span>
+                <img id="+1h_forecast_image" src="" class="forecast_image">
+                <span id="+1h_forecast"></span>
+            </div>
+            <div class="col">
+                <span class="forecast_title">+ 3H</span>
+                <img id="+3h_forecast_image" src="" class="forecast_image">
+                <span id="+3h_forecast"></span>
+            </div>
+            <div class="col">
+                <span class="forecast_title">+ 6H</span>
+                <img id="+6h_forecast_image" src="" class="forecast_image">
+                <span id="+6h_forecast"></span>
             </div>
 
         </div>
     </div>
     <div class="row">
-        <!-- Inside Block -->
-        <div class="block inside_bloc">
+        <!-- Inside Bloc -->
+        <div class="bloc inside_bloc">
             <div class="row center block_title">Inside</div>
             <div class="row">
                 <div class="col actual_data">
@@ -64,8 +69,8 @@
             </div>
         </div>
 
-        <!-- Outside Block -->
-        <div class="block outside_bloc">
+        <!-- Outside Bloc -->
+        <div class="bloc outside_bloc">
             <div class="row center block_title">Outside</div>
             <div class="row">
                 <div class="col actual_data">
@@ -79,20 +84,25 @@
 
                 <div class="col min_max">
                     <div class="row center block_title">- 24 h</div>
-                    <div class="block min">
+                    <div class="bloc min">
                         <span class="center outside_min_temp" id="outside_min_temp">14 <span class="unit">C°
                                 Min</span></span>
                     </div>
-                    <div class="block average">
+                    <div class="bloc average">
                         <span class="center outside_average_temp" id="outside_average_temp">28 <span class="unit">C°
                                 Avr</span></span>
                     </div>
-                    <div class="block max">
+                    <div class="bloc max">
                         <span class="center outside_max_temp" id="outside_max_temp">37 <span class="unit">C°
                                 Max</span></span>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- wind Bloc -->
+        <div class="bloc wind_bloc">
+
         </div>
 
     </div>
