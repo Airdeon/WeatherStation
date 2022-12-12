@@ -14,12 +14,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from Weather.views import Index, get_forcast
+from rest_framework import routers
+from Weather.views import LongTermDataViewSet
+
+
+# API URL
+router = routers.SimpleRouter()
+# Long Term Data API
+router.register("long_term_data", LongTermDataViewSet, basename="long_term_data")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", Index.as_view(), name="index"),
+    path("api/", include(router.urls)),
     path("forecast", get_forcast, name="forecast"),
 
 ]

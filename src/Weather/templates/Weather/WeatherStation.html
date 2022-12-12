@@ -66,4 +66,36 @@
         </div>
 
     </div>
+    <div class="row">
+        <div class="l33">
+            <legend>{{ form.chart_type.label }}</legend>
+            {% for radio in form.chart_type %}
+            <div class="myradio">
+                {{ radio }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="l33">
+            <legend>{{ form.chart_timing.label }}</legend>
+            {% for radio in form.chart_timing %}
+            <div class="myradio">
+                {{ radio }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="date_range_picker" class="row filter_form" style="display: None;">
+            <div class="l5 m5 s10">
+                <input type="date" id="start_date_select" onchange="fill_chart()">
+                <label for="start_date_select">Date de début</label>
+            </div>
+            <div class="l5 m5 s10">
+                <input type="date" id="end_date_select" onchange="fill_chart()">
+                <label for="end_date_select">Date de fin</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <canvas id="chart_canvas"></canvas>
+    </div>
 </body>

@@ -25,6 +25,6 @@ class LongTermData(models.Model):
     pressure = models.FloatField(verbose_name="Pression")
     wind_speed = models.FloatField(verbose_name="Vitesse actuel du vent")
     average_wind_speed = models.FloatField(verbose_name="Vitesse moyenne du vent")
-    max_wind_speed_10min = models.FloatField(verbose_name="Vitesse actuel du vent")
+    max_wind_speed_10min = models.FloatField(verbose_name="Vitesse maximum du vent sur 10 min")
     wind_direction = models.CharField(max_length=5, verbose_name="Direction du vent")
     battery = models.SmallIntegerField(verbose_name="battery")
