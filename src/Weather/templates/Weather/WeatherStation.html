@@ -31,24 +31,24 @@
         </div>
         <div class="bloc short_forecast" id="short_forecast">
             <div class="col">
-                <span class="forecast_title">Now</span>
+                <span class="forecast_title center">Now</span>
                 <img id="current_forecast_image" src="" class="forecast_image">
-                <span id="current_forecast"></span>
+                <span id="current_forecast" class="center"></span>
             </div>
             <div class="col">
-                <span class="forecast_title">+ 1H</span>
+                <span class="forecast_title center">+ 1H</span>
                 <img id="+1h_forecast_image" src="" class="forecast_image">
-                <span id="+1h_forecast"></span>
+                <span id="+1h_forecast" class="center"></span>
             </div>
             <div class="col">
-                <span class="forecast_title">+ 3H</span>
+                <span class="forecast_title center">+ 3H</span>
                 <img id="+3h_forecast_image" src="" class="forecast_image">
-                <span id="+3h_forecast"></span>
+                <span id="+3h_forecast" class="center"></span>
             </div>
             <div class="col">
-                <span class="forecast_title">+ 6H</span>
+                <span class="forecast_title center">+ 6H</span>
                 <img id="+6h_forecast_image" src="" class="forecast_image">
-                <span id="+6h_forecast"></span>
+                <span id="+6h_forecast" class="center"></span>
             </div>
 
         </div>
@@ -59,12 +59,14 @@
             <div class="row center block_title">Inside</div>
             <div class="row">
                 <div class="col actual_data">
-                    <span class="center inside_temperature" id="inside_temp">
-                        {{ inside_actual_data.temperature }}
-                        <span class="unit">C°</span></span>
-                    <span class="center inside_humidity" id="inside_humidity">
-                        {{ inside_actual_data.humidity }}
-                        <span class="unit">%</span></span>
+                    <span class="center inside_temperature">
+                        <span id="inside_temperature" class="data_value"></span>
+                        <span class="unit">C°</span>
+                    </span>
+                    <span class="center inside_humidity">
+                        <span id="inside_humidity" class="data_value"></span>
+                        <span class="unit">%</span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -74,27 +76,29 @@
             <div class="row center block_title">Outside</div>
             <div class="row">
                 <div class="col actual_data">
-                    <span class="center outside_temperature" id="outside_temp">
-                        {{ actual_data.temperature }}
-                        <span class="unit">C°</span></span>
-                    <span class="center outside_humidity" id="outside_humidity">
-                        {{ actual_data.humidity }}
-                        <span class="unit">%</span></span>
+                    <span class="center outside_temperature">
+                        <span id="outside_temperature" class="data_value"></span>
+                        <span class="unit">C°</span>
+                    </span>
+                    <span class="center outside_humidity">
+                        <span id="outside_humidity" class="data_value"></span>
+                        <span class="unit">%</span>
+                    </span>
                 </div>
 
                 <div class="col min_max">
                     <div class="row center block_title">- 24 h</div>
                     <div class="bloc min">
-                        <span class="center outside_min_temp" id="outside_min_temp">14 <span class="unit">C°
-                                Min</span></span>
+                        <span id="outside_min" class=""></span>
+                        <span class="unit">C° Min</span>
                     </div>
                     <div class="bloc average">
-                        <span class="center outside_average_temp" id="outside_average_temp">28 <span class="unit">C°
-                                Avr</span></span>
+                        <span id="outside_average" class=""></span>
+                        <span class="unit">C° Avr</span>
                     </div>
                     <div class="bloc max">
-                        <span class="center outside_max_temp" id="outside_max_temp">37 <span class="unit">C°
-                                Max</span></span>
+                        <span id="outside_max" class=""></span>
+                        <span class="unit">C° Max</span></span>
                     </div>
                 </div>
             </div>
@@ -107,35 +111,41 @@
 
     </div>
     <div class="row">
-        <div class="l33">
-            <legend>{{ form.chart_type.label }}</legend>
-            {% for radio in form.chart_type %}
-            <div class="myradio">
-                {{ radio }}
+        <div class="col config_graph">
+            <div class="">
+                <legend>{{ form.chart_type.label }}</legend>
+                {% for radio in form.chart_type %}
+                <div class="myradio">
+                    {{ radio }}
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-        <div class="l33">
-            <legend>{{ form.chart_timing.label }}</legend>
-            {% for radio in form.chart_timing %}
-            <div class="myradio">
-                {{ radio }}
+            <div class="">
+                <legend>{{ form.chart_timing.label }}</legend>
+                {% for radio in form.chart_timing %}
+                <div class="myradio">
+                    {{ radio }}
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
+            <div id="date_range_picker" class="row filter_form" style="display: None;">
+                <div class="col">
+                    <label for="start_date_select">Date de début</label>
+                    <input type="date" id="start_date_select" onchange="fill_chart()">
+                </div>
+                <div class="col">
+                    <label for="end_date_select">Date de fin</label>
+                    <input type="date" id="end_date_select" onchange="fill_chart()">
+                </div>
+            </div>
 
-        <div id="date_range_picker" class="row filter_form" style="display: None;">
-            <div class="l5 m5 s10">
-                <input type="date" id="start_date_select" onchange="fill_chart()">
-                <label for="start_date_select">Date de début</label>
-            </div>
-            <div class="l5 m5 s10">
-                <input type="date" id="end_date_select" onchange="fill_chart()">
-                <label for="end_date_select">Date de fin</label>
-            </div>
         </div>
-    </div>
-    <div class="row">
-        <canvas id="chart_canvas"></canvas>
+        <div class="col graph_bloc">
+            <canvas id="chart_canvas"></canvas>
+        </div>
+        <script>
+            fill_chart()
+        </script>
+
     </div>
 </body>

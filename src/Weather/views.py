@@ -4,7 +4,7 @@ from django.http import JsonResponse
 import json
 import requests
 from .forms import ChartFilterForm
-from .serializers import LongTermDataSerializer
+from .serializers import LongTermDataSerializer, ActualDataSerializer, InsideActualDataSerializer
 from .models import LongTermData
 from django.utils import timezone
 from datetime import datetime
@@ -20,8 +20,24 @@ class Index(TemplateView):
         return context
 
 
+class ActualDataViewSet(ReadOnlyModelViewSet):
+    """API Actual outside data"""
+    serializer_class = ActualDataSerializer
+
+    def get_queryset(self):
+        return ActualData.objects.filter(id=1)
+
+
+class InsideActualDataViewSet(ReadOnlyModelViewSet):
+    """API Actual inside data"""
+    serializer_class = InsideActualDataSerializer
+
+    def get_queryset(self):
+        return InsideActualData.objects.filter(id=1)
+
+
 class LongTermDataViewSet(ReadOnlyModelViewSet):
-    """Acces API Control Scies"""
+    """API Long term data"""
     serializer_class = LongTermDataSerializer
 
     def get_queryset(self):

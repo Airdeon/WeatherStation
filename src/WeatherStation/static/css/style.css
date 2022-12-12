@@ -124,4 +124,13 @@ a {
       flex-wrap: nowrap;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+}
+
+.config_graph {
+  width: 250px;
+}
+
+.graph_bloc {
+  width: calc(100% - 260px);
+  min-width: 400px;
 }/*# sourceMappingURL=style.css.map */

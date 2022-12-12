@@ -17,13 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from Weather.views import Index, get_forcast
 from rest_framework import routers
-from Weather.views import LongTermDataViewSet
+from Weather.views import LongTermDataViewSet, ActualDataViewSet, InsideActualDataViewSet
 
 
 # API URL
 router = routers.SimpleRouter()
 # Long Term Data API
 router.register("long_term_data", LongTermDataViewSet, basename="long_term_data")
+router.register("outside_data", ActualDataViewSet, basename="outside_data")
+router.register("inside_data", InsideActualDataViewSet, basename="inside_data")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
