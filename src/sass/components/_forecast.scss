@@ -1,0 +1,10 @@
+.forecast_image {
+    max-height: 80px;
+}
+
+.short_forecast {
+    flex-grow: 10;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
