@@ -57,7 +57,7 @@
         <!-- Inside Bloc -->
         <div class="bloc inside_bloc">
             <div class="row center block_title">Inside</div>
-            <div class="row">
+            <div class="row center">
                 <div class="col actual_data">
                     <span class="center inside_temperature">
                         <span id="inside_temperature" class="data_value"></span>
@@ -74,7 +74,7 @@
         <!-- Outside Bloc -->
         <div class="bloc outside_bloc">
             <div class="row center block_title">Outside</div>
-            <div class="row">
+            <div class="row center">
                 <div class="col actual_data">
                     <span class="center outside_temperature">
                         <span id="outside_temperature" class="data_value"></span>
@@ -106,11 +106,25 @@
 
         <!-- wind Bloc -->
         <div class="bloc wind_bloc">
-
+            <div class="row center block_title">Pression et vent</div>
+            <div class="row center">
+                <div class="col actual_data">
+                    <span class="center">
+                        <span id="pressure" class="data_value"></span>
+                        <span class="unit">Hpa</span>
+                    </span>
+                    <span class="center">
+                        <span id="wind" class="data_value"></span>
+                        <span class="unit"> Km/h </span>
+                        <span id="wind_direction" class="data_value"></span>
+                    </span>
+                </div>
+            </div>
         </div>
 
     </div>
-    <div class="row">
+
+    <div class="row bloc">
         <div class="col config_graph">
             <div class="">
                 <legend>{{ form.chart_type.label }}</legend>

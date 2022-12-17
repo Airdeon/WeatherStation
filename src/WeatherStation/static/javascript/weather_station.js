@@ -82,6 +82,12 @@ async function fill_actual_data(){
         document.getElementById("outside_average").innerHTML = average;
         document.getElementById("outside_max").innerHTML = max;
     }
+
+    // pressure and wind
+
+    document.getElementById("pressure").innerHTML = outside_data[0].pressure;
+    document.getElementById("wind").innerHTML = outside_data[0].wind_speed;
+    document.getElementById("wind_direction").innerHTML = outside_data[0].wind_direction;
 }
 
 async function fill_forecast_data() {
