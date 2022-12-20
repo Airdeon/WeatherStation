@@ -76,7 +76,7 @@ async function fill_actual_data() {
             }
             average += data.temperature
         }
-        average = average / day_value_data.length
+        average = Math.round((average / day_value_data.length) * 10) / 10
 
         document.getElementById("outside_min").innerHTML = min;
         document.getElementById("outside_average").innerHTML = average;
@@ -212,7 +212,7 @@ async function fill_chart() {
     let url = API_URL + "?start_date=" + start_date_string + "&" + "end_date=" + end_date_string
 
     let response = await get_data(url);
-    let graph_info = build_simple_graph(response, type, average_timing);
+    let graph_info = build_simple_graph(response, type, range, average_timing);
 
     if (typeof weather_chart === 'undefined') {
         let ctx = document.getElementById(ELEMENT_ID).getContext('2d');
@@ -233,7 +233,7 @@ async function fill_chart() {
 }
 
 
-function build_simple_graph(response, type, timing = "all_data") {
+function build_simple_graph(response, type, range, timing = "all_data") {
     let date = [];
     let value_array = [];
     let max_temperature = []
@@ -272,8 +272,23 @@ function build_simple_graph(response, type, timing = "all_data") {
 
             let actual_date = new Date(data.time)
             if (timing == "all_data") {
-                date.push(data.time);
-                array.push(data_value);
+                if (range == "day"){
+                    date.push(get_hour_string(data.time));
+                }
+                else if (range == "week"){
+                    date.push(get_day_month_string(data.time));
+                }
+                else if (range == "month"){
+                    date.push(get_day_month_string(data.time));
+                }
+                else if (range == "year"){
+                    date.push(get_day_month_string(data.time));
+                }
+                else {
+                    date.push(get_full_datetime_string(data.time));
+                }
+
+                value_array.push(data_value);
                 if (type == "wind") {
                     max_wind_speed.push(data.max_wind_speed_10min);
                 }
@@ -282,7 +297,7 @@ function build_simple_graph(response, type, timing = "all_data") {
             // Hourly
             else if (timing == "hourly") {
                 if (actual_date.getHours() == last_date.getHours()) {
-                    temp_array.push[data_value];
+                    temp_array.push(data_value);
                     if (type == "temperature") {
                         if (max_temperature.length == 0) {
                             max_temperature.push(data_value);
@@ -314,7 +329,7 @@ function build_simple_graph(response, type, timing = "all_data") {
                     value_array.push(average(temp_array));
                     date.push(get_hour_string(data.time));
                     temp_array = [];
-                    temp_array.push[data_value];
+                    temp_array.push(data_value);
                     if (type == "temperature") {
                         max_temperature.push(data_value);
                         min_temperature.push(data_value);
@@ -329,7 +344,7 @@ function build_simple_graph(response, type, timing = "all_data") {
             //Daily
             else if (timing == "daily") {
                 if (actual_date.getDate() == last_date.getDate()) {
-                    temp_array.push[data_value];
+                    temp_array.push(data_value);
                     if (type == "temperature") {
                         if (max_temperature.length == 0) {
                             max_temperature.push(data_value);
@@ -361,7 +376,7 @@ function build_simple_graph(response, type, timing = "all_data") {
                     value_array.push(average(temp_array));
                     date.push(get_day_month_string(data.time));
                     temp_array = [];
-                    temp_array.push[data_value];
+                    temp_array.push(data_value);
                     if (type == "temperature") {
                         max_temperature.push(data_value);
                         min_temperature.push(data_value);
@@ -374,7 +389,7 @@ function build_simple_graph(response, type, timing = "all_data") {
             }
             else if (timing == "monthly") {
                 if (actual_date.getMonth() == last_date.getMonth()) {
-                    temp_array.push[data_value];
+                    temp_array.push(data_value);
                     if (type == "temperature") {
                         if (max_temperature.length == 0) {
                             max_temperature.push(data_value);
@@ -406,7 +421,7 @@ function build_simple_graph(response, type, timing = "all_data") {
                     value_array.push(average(temp_array));
                     date.push(get_month_year_string(data.time));
                     temp_array = [];
-                    temp_array.push[data_value];
+                    temp_array.push(data_value);
                     if (type == "temperature") {
                         max_temperature.push(data_value);
                         min_temperature.push(data_value);
@@ -419,7 +434,7 @@ function build_simple_graph(response, type, timing = "all_data") {
             }
             else if (timing == "yearly") {
                 if (actual_date.getFullYear() == last_date.getFullYear()) {
-                    temp_array.push[data_value];
+                    temp_array.push(data_value);
                     if (type == "temperature") {
                         if (max_temperature.length == 0) {
                             max_temperature.push(data_value);
@@ -451,7 +466,7 @@ function build_simple_graph(response, type, timing = "all_data") {
                     value_array.push(average(temp_array));
                     date.push(data.time.getFullYear());
                     temp_array = [];
-                    temp_array.push[data_value];
+                    temp_array.push(data_value);
                     if (type == "temperature") {
                         max_temperature.push(data_value);
                         min_temperature.push(data_value);
@@ -464,6 +479,7 @@ function build_simple_graph(response, type, timing = "all_data") {
             }
         }
         if (timing != "all_data") {
+            console.log("test")
             value_array.push(average(temp_array));
         }
     }
@@ -500,7 +516,7 @@ function build_simple_graph(response, type, timing = "all_data") {
 
     let temperature_minimum_dict = {
         label: "Minimum",
-        data: max_temperature,
+        data: min_temperature,
         fontColor: 'rgb(255, 255, 255)',
         borderColor: 'rgb(0, 0, 255)',
         pointRadius: 5,
@@ -572,6 +588,7 @@ function build_simple_graph(response, type, timing = "all_data") {
         tension: 0.3,
     }
 
+    console.log(value_array)
 
     let graph_info = {
         labels: date,
@@ -579,7 +596,7 @@ function build_simple_graph(response, type, timing = "all_data") {
     }
 
     if (type == "temperature") {
-        graph_info["datasets"].push(temperature_dict)
+        graph_info["datasets"].push(temperature_dict);
         if (timing != "all_data") {
             graph_info["datasets"].push(temperature_maximum_dict);
             graph_info["datasets"].push(temperature_minimum_dict);
@@ -587,11 +604,11 @@ function build_simple_graph(response, type, timing = "all_data") {
     }
 
     else if (type == "humidity") {
-        graph_info["datasets"].push(humidity_dict)
+        graph_info["datasets"].push(humidity_dict);
     }
 
     else if (type == "pressure") {
-        graph_info["datasets"].push(pressure_dict)
+        graph_info["datasets"].push(pressure_dict);
     }
 
     else if (type == "wind") {

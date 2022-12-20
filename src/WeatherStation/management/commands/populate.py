@@ -9,7 +9,8 @@ class Command(BaseCommand):
     help = "populate database with previous data"
 
     def handle(self, *args, **options):
-        LongTermData.objects.create(
+        """populate for test purpose"""
+        """LongTermData.objects.create(
             time=datetime.utcnow(),
             temperature=24.5,
             humidity=30,
@@ -28,7 +29,7 @@ class Command(BaseCommand):
             max_wind_speed_10min=20,
             wind_direction="E",
             battery=32,
-        )
+        )"""
         ActualData.objects.create(
             time=datetime.utcnow(),
             temperature=24.6,

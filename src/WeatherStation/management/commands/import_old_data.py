@@ -20,10 +20,13 @@ class Command(BaseCommand):
 
         for row in results:
             new_param_list = []
-            date = row[4]
+            date = row[1]
+            print(row)
+
             paris = pytz.timezone("Europe/Paris")
             date = paris.localize(date)
             date = date.astimezone(pytz.utc)
-            print(row)
+            #print(date)
 
-            #LongTermData.objects.create(time=date, temperature=, humidity=, pressure=, average_wind_speed=, max_wind_speed_10min=, wind_direction=, battery=,)
+
+            LongTermData.objects.create(time=date, temperature=row[3], humidity=row[4], pressure=row[5], average_wind_speed=row[6], max_wind_speed_10min=row[7], wind_direction=row[8], battery=row[10],)

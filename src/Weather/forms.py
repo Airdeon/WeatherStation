@@ -10,7 +10,7 @@ class ChartFilterForm(forms.Form):
     )
     chart_timing = forms.ChoiceField(
         widget=forms.RadioSelect(attrs={"onchange": "fill_chart()"}),
-        initial=(1, "Semaine"),
+        initial=(0, "Jour"),
         choices=[(0, "Jour"), (1, "Semaine"), (2, "Mois"), (3, "Année"), (4, "Date à date")],
         label="Plage de dates",
     )

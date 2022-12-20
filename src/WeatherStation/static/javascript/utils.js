@@ -19,6 +19,7 @@ function get_UTC_datetime_string(date) {
     return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + "T" + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds();
 }
 
+
 function average(array) {
     let sum = 0;
     for (value of array) {
@@ -27,18 +28,27 @@ function average(array) {
     return sum / array.length;
 }
 
+function get_full_datetime_string(date) {
+    let real_date = new Date(date)
+    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+}
+
 function get_hours_minutes_string(date) {
-    return date.getHours() + ":" + date.getMinutes()
+    let real_date = new Date(date)
+    return real_date.getHours() + ":" + real_date.getMinutes()
 }
 
 function get_hour_string(date) {
-    return date.getHours() + "H"
+    let real_date = new Date(date)
+    return real_date.getHours() + "H"
 }
 
 function get_day_month_string(date) {
-    return date.getDate() + "/" + (date.getMonth() + 1)
+    let real_date = new Date(date)
+    return real_date.getDate() + "/" + (real_date.getMonth() + 1)
 }
 
 function get_month_year_string(date) {
-    return (date.getMonth() + 1) + "/" + date.getFullYear()
+    let real_date = new Date(date)
+    return (real_date.getMonth() + 1) + "/" + real_date.getFullYear()
 }

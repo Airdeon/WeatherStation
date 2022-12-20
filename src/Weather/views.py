@@ -50,10 +50,11 @@ class LongTermDataViewSet(ReadOnlyModelViewSet):
             start_date = timezone.make_aware(datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S"))
             end_date = timezone.make_aware(datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S"))
             queryset = queryset.filter(time__range=(start_date, end_date))
+
         elif start_date is not None:
             end_date = timezone.now()
             queryset = queryset.filter(
-                time__range=(timezone.make_aware(datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S"), end_date))
+                time__range=[timezone.make_aware(datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S")), end_date]
             )
         return queryset
 
