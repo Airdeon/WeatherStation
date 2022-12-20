@@ -9,7 +9,7 @@ window.onload = function () {
     fill_forecast_data();
     //Chart
     fill_chart();
-    setInterval("fill_chart()", 60000);
+    setInterval("fill_chart()", 600000);
     //actual data
     fill_actual_data();
 }
@@ -38,7 +38,7 @@ function get_data(url) {
         .catch(error => alert("Erreur : " + error));
 }
 
-async function fill_actual_data(){
+async function fill_actual_data() {
     let url_inside = BASE_URL + "api/inside_data";
     let url_outside = BASE_URL + "api/outside_data";
     let url_day_value = BASE_URL + "api/long_term_data/"
@@ -55,23 +55,23 @@ async function fill_actual_data(){
     document.getElementById("outside_humidity").innerHTML = outside_data[0].humidity;
 
     let date = new Date()
-    let end_date_string = get_UTC_date_string(date)
+    let end_date_string = get_UTC_datetime_string(date)
     date.setDate(date.getDate() - 1)
-    let start_date_string = get_UTC_date_string(date)
+    let start_date_string = get_UTC_datetime_string(date)
     url_day_value += "?start_date=" + start_date_string + "&" + "end_date=" + end_date_string
 
     let day_value_data = await get_data(url_day_value);
 
-    if (day_value_data.length > 0){
+    if (day_value_data.length > 0) {
         let min = day_value_data[0].temperature
         let max = day_value_data[0].temperature
         let average = 0
 
-        for (data of day_value_data){
-            if (data.temperature < min){
+        for (data of day_value_data) {
+            if (data.temperature < min) {
                 min = data.temperature
             }
-            if (data.temperature > max){
+            if (data.temperature > max) {
                 max = data.temperature
             }
             average += data.temperature
@@ -106,89 +106,102 @@ async function fill_forecast_data() {
     document.getElementById('+6h_forecast_image').src = "static/images/" + response.hourly[7].weather[0].icon + ".png";
 }
 
-function get_UTC_date_string(date) {
-    return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + "T" + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds();
-}
-
-async function fill_chart(){
+async function fill_chart() {
     const ELEMENT_ID = 'chart_canvas'
     const API_URL = BASE_URL + "api/long_term_data/"
 
     let start_date_string = "";
     let end_date_string = "";
 
+    // get type
     let type = "";
-    if (document.getElementById("id_chart_type_0").checked){
+    if (document.getElementById("id_chart_type_0").checked) {
         type = "temperature";
     }
-    else if (document.getElementById("id_chart_type_1").checked){
+    else if (document.getElementById("id_chart_type_1").checked) {
         type = "humidity";
     }
-    else if (document.getElementById("id_chart_type_2").checked){
+    else if (document.getElementById("id_chart_type_2").checked) {
         type = "pressure";
     }
-    else if (document.getElementById("id_chart_type_3").checked){
+    else if (document.getElementById("id_chart_type_3").checked) {
         type = "wind";
     }
 
+    // get timing
+    let average_timing = "all_data"
+    if (document.getElementById("id_average_timing_1").checked) {
+        average_timing = "hourly"
+    }
+    if (document.getElementById("id_average_timing_2").checked) {
+        average_timing = "daily"
+    }
+    if (document.getElementById("id_average_timing_3").checked) {
+        average_timing = "monthly"
+    }
+    if (document.getElementById("id_average_timing_4").checked) {
+        average_timing = "yearly"
+    }
+
+    // get date range
     document.getElementById('date_range_picker').style.display = 'none';
-    let timing = ""
-    if (document.getElementById("id_chart_timing_0").checked){
-        timing = "day";
+    let range = ""
+    if (document.getElementById("id_chart_timing_0").checked) {
+        range = "day";
         let date = new Date()
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
-        start_date_string = get_UTC_date_string(date)
+        start_date_string = get_UTC_datetime_string(date)
         date.setDate(date.getDate() + 1);
-        end_date_string = get_UTC_date_string(date)
+        end_date_string = get_UTC_datetime_string(date)
     }
-    else if (document.getElementById("id_chart_timing_1").checked){
-        timing = "week";
+    else if (document.getElementById("id_chart_timing_1").checked) {
+        range = "week";
         let date = new Date()
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
         date.setDate(date.getDate() + 1);
-        end_date_string = get_UTC_date_string(date)
+        end_date_string = get_UTC_datetime_string(date)
         date.setDate(date.getDate() - 7);
-        start_date_string = get_UTC_date_string(date)
+        start_date_string = get_UTC_datetime_string(date)
     }
-    else if (document.getElementById("id_chart_timing_2").checked){
-        timing = "month";
+    else if (document.getElementById("id_chart_timing_2").checked) {
+        range = "month";
         let date = new Date()
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
         date.setDate(date.getDate() + 1);
-        end_date_string = get_UTC_date_string(date)
+        end_date_string = get_UTC_datetime_string(date)
         date.setMonth(date.getMonth() - 1);
-        start_date_string = get_UTC_date_string(date)
+        start_date_string = get_UTC_datetime_string(date)
     }
-    else if (document.getElementById("id_chart_timing_3").checked){
-        timing = "year";
+    else if (document.getElementById("id_chart_timing_3").checked) {
+        range = "year";
         let date = new Date()
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
         date.setDate(date.getDate() + 1);
-        end_date_string = get_UTC_date_string(date)
+        end_date_string = get_UTC_datetime_string(date)
         date.setFullYear(date.getFullYear() - 1);
-        start_date_string = get_UTC_date_string(date)
+        start_date_string = get_UTC_datetime_string(date)
     }
-    else if (document.getElementById("id_chart_timing_4").checked){
-        timing = "date_range";
+    else if (document.getElementById("id_chart_timing_4").checked) {
+        range = "date_range";
         document.getElementById('date_range_picker').style.display = 'block';
 
         let start_date = document.getElementById('start_date_select').value
-        if (start_date != ""){
-            start_date_string = get_UTC_date_string(new Date(document.getElementById('start_date_select').value))
+        if (start_date != "") {
+            start_date_string = get_UTC_datetime_string(new Date(document.getElementById('start_date_select').value))
         }
         let end_date = document.getElementById('end_date_select').value
-        if (end_date != ""){
+        if (end_date != "") {
             end_date = new Date(document.getElementById('end_date_select').value)
             end_date.setDate(end_date.getDate() + 1)
-            end_date_string = get_UTC_date_string(end_date)
+            end_date_string = get_UTC_datetime_string(end_date)
         }
     }
 
@@ -199,19 +212,7 @@ async function fill_chart(){
     let url = API_URL + "?start_date=" + start_date_string + "&" + "end_date=" + end_date_string
 
     let response = await get_data(url);
-    let graph_info = ""
-
-    switch (type)
-    {
-        case 'temperature' : graph_info = build_temperature_graph(response);
-        break;
-        case 'humidity' : graph_info = build_humidity_graph(response);
-        break;
-        case 'pressure' : graph_info = build_pressure_graph(response);
-        break;
-        case 'wind' : graph_info = build_wind_graph(response);
-        break;
-    }
+    let graph_info = build_simple_graph(response, type, average_timing);
 
     if (typeof weather_chart === 'undefined') {
         let ctx = document.getElementById(ELEMENT_ID).getContext('2d');
@@ -231,53 +232,413 @@ async function fill_chart(){
     }
 }
 
-function build_temperature_graph(response){
+
+function build_simple_graph(response, type, timing = "all_data") {
     let date = [];
-    let temperature_array = [];
-    for (data of response){
+    let value_array = [];
+    let max_temperature = []
+    let min_temperature = []
+    let max_wind_speed = []
+    if (response.length > 0) {
+        let last_date = new Date(response[0]);
+        let temp_array = [];
+
+        if (timing == "hourly") {
+            date.push(get_hour_string(last_date));
+        }
+        else if (timing == "daily") {
+            date.push(get_day_month_string(last_date));
+        }
+        else if (timing == "monthly") {
+            date.push(get_month_year_string(last_date));
+        }
+        else if (timing == "yearly") {
+            date.push(last_date.getFullYear);
+        }
+
+        for (data of response) {
+            if (type == "temperature") {
+                var data_value = data.temperature;
+            }
+            else if (type == "pressure") {
+                var data_value = data.pressure;
+            }
+            else if (type == "humidity") {
+                var data_value = data.humidity;
+            }
+            else if (type == "wind") {
+                var data_value = data.average_wind_speed;
+            }
+
+            let actual_date = new Date(data.time)
+            if (timing == "all_data") {
+                date.push(data.time);
+                array.push(data_value);
+                if (type == "wind") {
+                    max_wind_speed.push(data.max_wind_speed_10min);
+                }
+            }
+
+            // Hourly
+            else if (timing == "hourly") {
+                if (actual_date.getHours() == last_date.getHours()) {
+                    temp_array.push[data_value];
+                    if (type == "temperature") {
+                        if (max_temperature.length == 0) {
+                            max_temperature.push(data_value);
+                            min_temperature.push(data_value);
+                        }
+                        else {
+                            if (max_temperature[max_temperature.length - 1] < data_value) {
+                                max_temperature[max_temperature.length - 1] = data_value;
+                            }
+                            if (min_temperature[min_temperature.length - 1] > data_value) {
+                                min_temperature[min_temperature.length - 1] = data_value;
+                            }
+                        }
+                    }
+                    else if (type == "wind") {
+                        if (max_wind_speed.length == 0) {
+                            max_wind_speed.push(data.max_wind_speed_10min)
+                        }
+                        else {
+                            if (max_wind_speed[max_wind_speed.length - 1] < data.max_wind_speed_10min) {
+                                max_wind_speed[max_wind_speed.length - 1] = data.max_wind_speed_10min;
+                            }
+                        }
+
+                    }
+                    last_date = actual_date;
+                }
+                else {
+                    value_array.push(average(temp_array));
+                    date.push(get_hour_string(data.time));
+                    temp_array = [];
+                    temp_array.push[data_value];
+                    if (type == "temperature") {
+                        max_temperature.push(data_value);
+                        min_temperature.push(data_value);
+                    }
+                    else if (type == "wind") {
+                        max_wind_speed.push(data.max_wind_speed_10min)
+                    }
+                    last_date = actual_date;
+                }
+            }
+
+            //Daily
+            else if (timing == "daily") {
+                if (actual_date.getDate() == last_date.getDate()) {
+                    temp_array.push[data_value];
+                    if (type == "temperature") {
+                        if (max_temperature.length == 0) {
+                            max_temperature.push(data_value);
+                            min_temperature.push(data_value);
+                        }
+                        else {
+                            if (max_temperature[max_temperature.length - 1] < data_value) {
+                                max_temperature[max_temperature.length - 1] = data_value;
+                            }
+                            if (min_temperature[min_temperature.length - 1] > data_value) {
+                                min_temperature[min_temperature.length - 1] = data_value;
+                            }
+                        }
+                    }
+                    else if (type == "wind") {
+                        if (max_wind_speed.length == 0) {
+                            max_wind_speed.push(data.max_wind_speed_10min)
+                        }
+                        else {
+                            if (max_wind_speed[max_wind_speed.length - 1] < data.max_wind_speed_10min) {
+                                max_wind_speed[max_wind_speed.length - 1] = data.max_wind_speed_10min;
+                            }
+                        }
+
+                    }
+                    last_date = actual_date;
+                }
+                else {
+                    value_array.push(average(temp_array));
+                    date.push(get_day_month_string(data.time));
+                    temp_array = [];
+                    temp_array.push[data_value];
+                    if (type == "temperature") {
+                        max_temperature.push(data_value);
+                        min_temperature.push(data_value);
+                    }
+                    else if (type == "wind") {
+                        max_wind_speed.push(data.max_wind_speed_10min)
+                    }
+                    last_date = actual_date;
+                }
+            }
+            else if (timing == "monthly") {
+                if (actual_date.getMonth() == last_date.getMonth()) {
+                    temp_array.push[data_value];
+                    if (type == "temperature") {
+                        if (max_temperature.length == 0) {
+                            max_temperature.push(data_value);
+                            min_temperature.push(data_value);
+                        }
+                        else {
+                            if (max_temperature[max_temperature.length - 1] < data_value) {
+                                max_temperature[max_temperature.length - 1] = data_value;
+                            }
+                            if (min_temperature[min_temperature.length - 1] > data_value) {
+                                min_temperature[min_temperature.length - 1] = data_value;
+                            }
+                        }
+                    }
+                    else if (type == "wind") {
+                        if (max_wind_speed.length == 0) {
+                            max_wind_speed.push(data.max_wind_speed_10min)
+                        }
+                        else {
+                            if (max_wind_speed[max_wind_speed.length - 1] < data.max_wind_speed_10min) {
+                                max_wind_speed[max_wind_speed.length - 1] = data.max_wind_speed_10min;
+                            }
+                        }
+
+                    }
+                    last_date = actual_date;
+                }
+                else {
+                    value_array.push(average(temp_array));
+                    date.push(get_month_year_string(data.time));
+                    temp_array = [];
+                    temp_array.push[data_value];
+                    if (type == "temperature") {
+                        max_temperature.push(data_value);
+                        min_temperature.push(data_value);
+                    }
+                    else if (type == "wind") {
+                        max_wind_speed.push(data.max_wind_speed_10min)
+                    }
+                    last_date = actual_date;
+                }
+            }
+            else if (timing == "yearly") {
+                if (actual_date.getFullYear() == last_date.getFullYear()) {
+                    temp_array.push[data_value];
+                    if (type == "temperature") {
+                        if (max_temperature.length == 0) {
+                            max_temperature.push(data_value);
+                            min_temperature.push(data_value);
+                        }
+                        else {
+                            if (max_temperature[max_temperature.length - 1] < data_value) {
+                                max_temperature[max_temperature.length - 1] = data_value;
+                            }
+                            if (min_temperature[min_temperature.length - 1] > data_value) {
+                                min_temperature[min_temperature.length - 1] = data_value;
+                            }
+                        }
+                    }
+                    else if (type == "wind") {
+                        if (max_wind_speed.length == 0) {
+                            max_wind_speed.push(data.max_wind_speed_10min)
+                        }
+                        else {
+                            if (max_wind_speed[max_wind_speed.length - 1] < data.max_wind_speed_10min) {
+                                max_wind_speed[max_wind_speed.length - 1] = data.max_wind_speed_10min;
+                            }
+                        }
+
+                    }
+                    last_date = actual_date;
+                }
+                else {
+                    value_array.push(average(temp_array));
+                    date.push(data.time.getFullYear());
+                    temp_array = [];
+                    temp_array.push[data_value];
+                    if (type == "temperature") {
+                        max_temperature.push(data_value);
+                        min_temperature.push(data_value);
+                    }
+                    else if (type == "wind") {
+                        max_wind_speed.push(data.max_wind_speed_10min)
+                    }
+                    last_date = actual_date;
+                }
+            }
+        }
+        if (timing != "all_data") {
+            value_array.push(average(temp_array));
+        }
+    }
+
+    //type traduction
+    let label = ""
+    if (type == "temperature") {
+        label = "Temperature";
+        if (timing != "all_data") {
+            label = "Moyenne";
+        }
+    }
+    else if (type == "pressure") {
+        label = "Pression";
+    }
+    else if (type == "humidity") {
+        label = "Humidité";
+    }
+    else if (type == "wind") {
+        label = "Vent moyen";
+    }
+
+    let temperature_maximum_dict = {
+        label: "Maximum",
+        data: max_temperature,
+        fontColor: 'rgb(255, 255, 255)',
+        borderColor: 'rgb(255, 0, 0)',
+        pointRadius: 5,
+        pointHoverRadius: 5,
+        fill: false,
+        hidden: false,
+        tension: 0.3,
+    }
+
+    let temperature_minimum_dict = {
+        label: "Minimum",
+        data: max_temperature,
+        fontColor: 'rgb(255, 255, 255)',
+        borderColor: 'rgb(0, 0, 255)',
+        pointRadius: 5,
+        pointHoverRadius: 5,
+        fill: false,
+        hidden: false,
+        tension: 0.3,
+    }
+
+    let wind_maximum_dict = {
+        label: "Vent maximum",
+        data: max_wind_speed,
+        fontColor: 'rgb(255, 255, 255)',
+        borderColor: 'rgba(207, 110, 0, 0.8)',
+        backgroundColor: 'rgba(247, 132, 0, 0.8)',
+        borderWidth: '2px',
+        pointRadius: 5,
+        pointHoverRadius: 5,
+        fill: false,
+        hidden: false,
+        type: 'bar',
+    }
+
+    let temperature_dict = {
+        label: "Temperature",
+        data: value_array,
+        fontColor: 'rgb(255, 255, 255)',
+        borderColor: 'rgb(0, 191, 22)',
+        pointRadius: 5,
+        pointHoverRadius: 5,
+        fill: false,
+        hidden: false,
+        tension: 0.3,
+    }
+
+    let wind_dict = {
+        label: label,
+        data: value_array,
+        fontColor: 'rgb(255, 255, 255)',
+        borderColor: 'rgb(218, 255, 214)',
+        pointRadius: 5,
+        pointHoverRadius: 5,
+        fill: false,
+        hidden: false,
+        tension: 0.3,
+    }
+
+    let humidity_dict = {
+        label: "Humidité",
+        data: value_array,
+        fontColor: 'rgb(255, 255, 255)',
+        borderColor: 'rgb(0, 0, 255)',
+        pointRadius: 5,
+        pointHoverRadius: 5,
+        fill: false,
+        hidden: false,
+        tension: 0.3,
+    }
+
+    let pressure_dict = {
+        label: "Pression",
+        data: value_array,
+        fontColor: 'rgb(255, 255, 255)',
+        borderColor: 'rgb(0, 191, 22)',
+        pointRadius: 5,
+        pointHoverRadius: 5,
+        fill: false,
+        hidden: false,
+        tension: 0.3,
+    }
+
+
+    let graph_info = {
+        labels: date,
+        datasets: [],
+    }
+
+    if (type == "temperature") {
+        graph_info["datasets"].push(temperature_dict)
+        if (timing != "all_data") {
+            graph_info["datasets"].push(temperature_maximum_dict);
+            graph_info["datasets"].push(temperature_minimum_dict);
+        }
+    }
+
+    else if (type == "humidity") {
+        graph_info["datasets"].push(humidity_dict)
+    }
+
+    else if (type == "pressure") {
+        graph_info["datasets"].push(pressure_dict)
+    }
+
+    else if (type == "wind") {
+        graph_info["datasets"].push(wind_maximum_dict);
+        graph_info["datasets"].push(wind_dict);
+    }
+    console.log(graph_info);
+    return graph_info;
+}
+
+function build_wind_graph(response) {
+    let date = [];
+    let max_wind_speed_array = [];
+    let average_wind_speed_array = [];
+    for (data of response) {
         date.push(data.time);
-        temperature_array.push(data.temperature);
+        max_wind_speed_array.push(data.max_wind_speed_10min);
+        average_wind_speed_array.push(data.average_wind_speed);
     }
     let graph_info = {
         labels: date,
         datasets:
             [
                 {
-                    label: "Température",
-                    data: temperature_array,
+                    label: "Vent moyen",
+                    data: average_wind_speed_array,
                     fontColor: 'rgb(255, 255, 255)',
-                    borderColor: 'rgb(50, 52, 199)',
+                    borderColor: 'rgb(218, 255, 214)',
                     pointRadius: 5,
                     pointHoverRadius: 5,
                     fill: false,
                     hidden: false,
                     tension: 0.3,
                 },
-            ],
-    }
-    return graph_info
-}
-function build_humidity_graph(response){
-    let date = [];
-    let humidity_array = [];
-    for (data of response){
-        date.push(data.time);
-        humidity_array.push(data.humidity);
-    }
-    let graph_info = {
-        labels: date,
-        datasets:
-            [
                 {
-                    label: "Humidité",
-                    data: humidity_array,
+                    label: "Vent maximum",
+                    data: max_wind_speed_array,
                     fontColor: 'rgb(255, 255, 255)',
-                    borderColor: 'rgb(50, 52, 199)',
+                    borderColor: 'rgba(207, 110, 0, 0.8)',
+                    backgroundColor: 'rgba(247, 132, 0, 0.8)',
+                    borderWidth: '2px',
                     pointRadius: 5,
                     pointHoverRadius: 5,
                     fill: false,
                     hidden: false,
                     tension: 0.3,
+                    type: 'bar',
                 },
             ],
     }
@@ -324,6 +685,7 @@ const GRAPH_OPTION_1 = {
             ticks: {
                 color: 'rgb(255, 255, 255)',
             },
+
         }
     }
 }

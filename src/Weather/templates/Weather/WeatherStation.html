@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{% static 'images/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script type="text/javascript" src="{% static 'javascript/utils.js' %}"></script>
     <script type="text/javascript" src="{% static 'javascript/weather_station.js' %}"></script>
     <script type="text/javascript" src="{% static 'javascript/chart.js' %}"></script>
 
@@ -126,22 +127,37 @@
 
     <div class="row bloc">
         <div class="col config_graph">
-            <div class="">
-                <legend>{{ form.chart_type.label }}</legend>
+
+            <div class="radio_bloc">
+                <legend>{{ form.chart_type.label }} :</legend>
                 {% for radio in form.chart_type %}
                 <div class="myradio">
-                    {{ radio }}
+                    {{ radio.tag }}
+                    <label for="{{radio.id_for_label}}">{{radio.choice_label}}</label>
                 </div>
                 {% endfor %}
             </div>
-            <div class="">
-                <legend>{{ form.chart_timing.label }}</legend>
+
+            <div class="radio_bloc">
+                <legend>{{ form.average_timing.label }} :</legend>
+                {% for radio in form.average_timing %}
+                <div class="myradio">
+                    {{ radio.tag }}
+                    <label for="{{radio.id_for_label}}">{{radio.choice_label}}</label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="radio_bloc">
+                <legend>{{ form.chart_timing.label }} :</legend>
                 {% for radio in form.chart_timing %}
                 <div class="myradio">
-                    {{ radio }}
+                    {{ radio.tag }}
+                    <label for="{{radio.id_for_label}}">{{radio.choice_label}}</label>
                 </div>
                 {% endfor %}
             </div>
+
             <div id="date_range_picker" class="row filter_form" style="display: None;">
                 <div class="col">
                     <label for="start_date_select">Date de début</label>

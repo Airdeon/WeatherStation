@@ -14,3 +14,31 @@ Date.prototype.getWeek = function () {
     return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
         - 3 + (week1.getDay() + 6) % 7) / 7);
 }
+
+function get_UTC_datetime_string(date) {
+    return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate() + "T" + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds();
+}
+
+function average(array) {
+    let sum = 0;
+    for (value of array) {
+        sum += value;
+    }
+    return sum / array.length;
+}
+
+function get_hours_minutes_string(date) {
+    return date.getHours() + ":" + date.getMinutes()
+}
+
+function get_hour_string(date) {
+    return date.getHours() + "H"
+}
+
+function get_day_month_string(date) {
+    return date.getDate() + "/" + (date.getMonth() + 1)
+}
+
+function get_month_year_string(date) {
+    return (date.getMonth() + 1) + "/" + date.getFullYear()
+}

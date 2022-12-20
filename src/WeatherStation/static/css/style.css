@@ -133,4 +133,32 @@ a {
 .graph_bloc {
   width: calc(100% - 260px);
   min-width: 400px;
+}
+
+.radio_bloc {
+  margin-top: 10px;
+}
+.radio_bloc .myradio {
+  display: block;
+  position: relative;
+}
+.radio_bloc .myradio input[type=radio] {
+  width: 20px;
+  height: 20px;
+  content: "";
+  border: azure;
+  border-radius: 10px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  cursor: pointer;
+}
+.radio_bloc .myradio input[type=radio]:checked {
+  background: #ee5b30;
+}
+.radio_bloc .myradio input[type=radio]:checked + label {
+  color: #ee5b30;
+}
+.radio_bloc .myradio label {
+  cursor: pointer;
 }/*# sourceMappingURL=style.css.map */

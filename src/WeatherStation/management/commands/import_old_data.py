@@ -24,5 +24,6 @@ class Command(BaseCommand):
             paris = pytz.timezone("Europe/Paris")
             date = paris.localize(date)
             date = date.astimezone(pytz.utc)
+            print(row)
 
-            LongTermData.objects.create(time=date, temperature=, humidity=, pressure=, average_wind_speed=, max_wind_speed_10min=, wind_direction=, battery=,)
+            #LongTermData.objects.create(time=date, temperature=, humidity=, pressure=, average_wind_speed=, max_wind_speed_10min=, wind_direction=, battery=,)
