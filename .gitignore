@@ -2,3 +2,7 @@
 *.log
 model 3D/
 .*
+.env
+env
+__pycache__*
+images_work/

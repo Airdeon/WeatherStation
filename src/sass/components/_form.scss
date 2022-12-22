@@ -1,0 +1,33 @@
+.radio_bloc {
+    margin-top: 10px;
+
+    .myradio {
+
+        display: block;
+
+        position: relative;
+
+        input[type=radio] {
+
+            width: 20px;
+            height: 20px;
+            content: "";
+            border: azure;
+            border-radius: 10px;
+            appearance: none;
+            cursor: pointer;
+
+            &:checked {
+                background: $button_hover_color;
+            }
+
+            &:checked+label {
+                color: $button_hover_color;
+            }
+        }
+
+        label {
+            cursor: pointer;
+        }
+    }
+}

@@ -129,7 +129,7 @@ try:
             cursor.execute("INSERT INTO Global_Data (id, data_DateTime, UTCDateTime) VALUES (NULL, %s, %s)", (updateTime, datetime.utcnow()))
             if insideDataReady:
                 cursor.execute("UPDATE Global_Data SET pressure = %s WHERE data_DateTime = %s", (seaLevelPressure, updateTime))
-            if outsideDataReady :
+            if outsideDataReady:
                 outsideDataReady = False
                 # Calcul for rain precipitation
                 if int(outRainPrecipitation) < rainPrecipitationLastTime:
