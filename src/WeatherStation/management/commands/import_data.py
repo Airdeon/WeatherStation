@@ -111,23 +111,26 @@ class Command(BaseCommand):
                 if (time.time() - ousideDataTime) > 1800:
                     outsideDataRead = False
 
-                # Save actual value
-                inside.time = timezone.now()
-                inside.temperature = insideTemperature
-                inside.humidity = insideHumidity
-                inside.pressure = seaLevelPressure
-                inside.save()
+                if insideDataReady:
+                    # Save actual value
+                    inside.time = timezone.now()
+                    inside.temperature = insideTemperature
+                    inside.humidity = insideHumidity
+                    inside.pressure = seaLevelPressure
+                    inside.save()
 
-                outside.time = timezone.now()
-                outside.temperature = outTemperature
-                outside.humidity = outHumidity
-                outside.pressure = seaLevelPressure
-                outside.wind_speed = outWindSpeed
-                outside.average_wind_speed = outAverageWindSpeed
-                outside.max_wind_speed_10min = maxWind
-                outside.wind_direction = outWindDirection
-                outside.battery = outBattery
-                outside.save()
+                if outsideDataReady:
+                    outside.time = timezone.now()
+                    outside.temperature = outTemperature
+                    outside.humidity = outHumidity
+                    if insideDataReady:
+                        outside.pressure = seaLevelPressure
+                    outside.wind_speed = outWindSpeed
+                    outside.average_wind_speed = outAverageWindSpeed
+                    outside.max_wind_speed_10min = maxWind
+                    outside.wind_direction = outWindDirection
+                    outside.battery = outBattery
+                    outside.save()
 
                 # calcul for put around 10 minute
                 shortDate = time.strftime("%M")
