@@ -75,7 +75,7 @@ class Command(BaseCommand):
                     insideDataReady = True
                     insideTemperature = round(sensor.data.temperature, 1)
                     insideHumidity = sensor.data.humidity
-                    seaLevelPressure = sensor.data.pressure + pressureCorection
+                    seaLevelPressure = round(sensor.data.pressure + pressureCorection, 2)
                     print(sensor.data.temperature)
                     print(sensor.data.humidity)
                     print(seaLevelPressure)
