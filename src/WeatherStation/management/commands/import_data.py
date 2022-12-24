@@ -4,7 +4,7 @@ import MySQLdb
 import pytz
 import bme680
 import pigpio
-import vw
+from WeatherStation.management.commands import vw
 from django.utils import timezone
 import time
 
