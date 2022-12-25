@@ -9,6 +9,18 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+body::-webkit-scrollbar {
+  display: none; /*for Chrome, Safari and Opera */
+}
+
+html {
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+html::-webkit-scrollbar {
+  display: none; /*for Chrome, Safari and Opera */
+}
 
 .row {
   display: flex;
@@ -121,9 +133,7 @@ a {
   content: "";
   border: azure;
   border-radius: 10px;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   cursor: pointer;
 }
 .radio_bloc .myradio input[type=radio]:checked {
