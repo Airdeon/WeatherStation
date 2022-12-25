@@ -5,6 +5,9 @@ body {
     font-family: 'Ubuntu', sans-serif;
     color: $text_color;
     font-size: 1.5em;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 .row {

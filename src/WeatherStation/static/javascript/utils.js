@@ -34,21 +34,26 @@ function get_full_datetime_string(date) {
 }
 
 function get_hours_minutes_string(date) {
-    let real_date = new Date(date)
-    return real_date.getHours() + ":" + real_date.getMinutes()
+    let real_date = new Date(date);
+    return real_date.getHours() + ":" + real_date.getMinutes();
 }
 
 function get_hour_string(date) {
-    let real_date = new Date(date)
-    return real_date.getHours() + "H"
+    let real_date = new Date(date);
+    return real_date.getHours() + "H";
 }
 
 function get_day_month_string(date) {
-    let real_date = new Date(date)
-    return real_date.getDate() + "/" + (real_date.getMonth() + 1)
+    let real_date = new Date(date);
+    return real_date.getDate() + "/" + (real_date.getMonth() + 1);
+}
+
+function get_hour_day_month_string(date) {
+    let real_date = new Date(date);
+    return real_date.getDate() + "/" + (real_date.getMonth() + 1) + " " + real_date.getHours() + "H";
 }
 
 function get_month_year_string(date) {
-    let real_date = new Date(date)
-    return (real_date.getMonth() + 1) + "/" + real_date.getFullYear()
+    let real_date = new Date(date);
+    return (real_date.getMonth() + 1) + "/" + real_date.getFullYear();
 }

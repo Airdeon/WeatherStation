@@ -12,6 +12,7 @@ window.onload = function () {
     setInterval("fill_chart()", 600000);
     //actual data
     fill_actual_data();
+    setInterval("fill_actual_data()", 30000);
 }
 
 // show 0 before number if number < 10
@@ -273,7 +274,7 @@ function build_simple_graph(response, type, range, timing = "all_data") {
             let actual_date = new Date(data.time)
             if (timing == "all_data") {
                 if (range == "day"){
-                    date.push(get_hour_string(data.time));
+                    date.push(get_hours_minutes_string(data.time));
                 }
                 else if (range == "week"){
                     date.push(get_day_month_string(data.time));
