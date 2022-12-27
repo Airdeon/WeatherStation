@@ -22,10 +22,19 @@ function get_UTC_datetime_string(date) {
 
 function average(array) {
     let sum = 0;
+    let number_of_value = 0
     for (value of array) {
         sum += value;
+        if (value != null){
+            number_of_value += 1
+        }
     }
-    return sum / array.length;
+    if (number_of_value == 0){
+        return null;
+    }
+    else{
+        return sum / number_of_value;
+    }
 }
 
 function get_full_datetime_string(date) {
