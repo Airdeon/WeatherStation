@@ -12,7 +12,7 @@ window.onload = function () {
     setInterval("fill_chart()", 600000);
     //actual data
     fill_actual_data();
-    setInterval("fill_actual_data()", 30000);
+    setInterval("fill_actual_data()", 5000);
 }
 
 // show 0 before number if number < 10
@@ -64,10 +64,16 @@ async function fill_actual_data() {
     let day_value_data = await get_data(url_day_value);
 
     if (day_value_data.length > 0) {
-        let min = day_value_data[0].temperature
-        let max = day_value_data[0].temperature
+        let min = 0
+        let max = 0
         let average = 0
-
+        for (data of day_value_data){
+            if(data != null){
+                min = day_value_data[0].temperature;
+                max = day_value_data[0].temperature;
+                break;
+            }
+        }
         for (data of day_value_data) {
             if (data.temperature < min) {
                 min = data.temperature
@@ -241,7 +247,7 @@ function build_simple_graph(response, type, range, timing = "all_data") {
     let min_temperature = []
     let max_wind_speed = []
     if (response.length > 0) {
-        let last_date = new Date(response[0]);
+        let last_date = new Date(response[0].time);
         let temp_array = [];
 
         if (timing == "hourly") {
@@ -254,7 +260,7 @@ function build_simple_graph(response, type, range, timing = "all_data") {
             date.push(get_month_year_string(last_date));
         }
         else if (timing == "yearly") {
-            date.push(last_date.getFullYear);
+            date.push(last_date.getFullYear());
         }
 
         for (data of response) {
@@ -297,6 +303,7 @@ function build_simple_graph(response, type, range, timing = "all_data") {
 
             // Hourly
             else if (timing == "hourly") {
+                console
                 if (actual_date.getHours() == last_date.getHours()) {
                     temp_array.push(data_value);
                     if (type == "temperature") {
