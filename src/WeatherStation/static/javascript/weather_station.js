@@ -156,20 +156,14 @@ async function fill_chart() {
     if (document.getElementById("id_chart_timing_0").checked) {
         range = "day";
         let date = new Date()
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        start_date_string = get_UTC_datetime_string(date)
-        date.setDate(date.getDate() + 1);
         end_date_string = get_UTC_datetime_string(date)
+        date.setDate(date.getDate() - 1);
+        start_date_string = get_UTC_datetime_string(date)
+        
     }
     else if (document.getElementById("id_chart_timing_1").checked) {
         range = "week";
         let date = new Date()
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setDate(date.getDate() + 1);
         end_date_string = get_UTC_datetime_string(date)
         date.setDate(date.getDate() - 7);
         start_date_string = get_UTC_datetime_string(date)
