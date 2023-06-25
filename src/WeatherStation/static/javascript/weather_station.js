@@ -36,7 +36,7 @@ function dateAndTime() {
 function get_data(url) {
     return fetch(url)
         .then(data => data.json())
-        .catch(error => alert("Erreur : " + error));
+        .catch(error => console.log("Erreur : " + error));
 }
 
 async function fill_actual_data() {
